@@ -57,3 +57,4 @@ hello_agent/logs/
 hello_agent/docs/walkthrough.md
 test_output.log
 agent_test.log
+SESSION_HANDOFF.md

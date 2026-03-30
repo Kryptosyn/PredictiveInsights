@@ -68,5 +68,13 @@ Tell your participants to follow these **4 steps** to join the lab:
     - **Email**: `userXX@cisco.com`
     - **Password**: `CiscoLab2026!`
 
+5.  **Logging Out (IMPORTANT)**:
+    - **Web IDE**: Go to the top-left menu (Avatar icon) -> **Log Out**.
+    - **Premium Chat**: Click your username -> **Log Out**.
+    - **Splunk**: Click **Logout** at the top-right.
+
+> [!CAUTION]
+> Always log out before leaving the station to allow the next participant to use their own ID.
+
 > [!TIP]
 > **Data Privacy**: Because of our isolation filters, students will ONLY see their own data in Splunk dashboards ([https://roosevelt-nonentreating-paler.ngrok-free.dev/splunk/](https://roosevelt-nonentreating-paler.ngrok-free.dev/splunk/)) and when they ask the AI questions.

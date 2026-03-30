@@ -9,6 +9,10 @@ SPLUNK_HOST = os.getenv('SPLUNK_HOST', 'localhost')
 SPLUNK_PORT = os.getenv('SPLUNK_PORT', '8088')  # HEC port
 SPLUNK_TOKEN = os.getenv('SPLUNK_TOKEN', '')
 
+# Multi-user isolation: Default to the current Linux user if LAB_USER_ID is not set
+import getpass
+LAB_USER_ID = os.getenv('LAB_USER_ID', getpass.getuser())
+
 def generate_nexus_telemetry():
     """Simulates Cisco Nexus 9000 telemetry."""
     return {
@@ -55,7 +59,7 @@ def send_to_splunk(data, sourcetype):
     url = f"https://{SPLUNK_HOST}:{SPLUNK_PORT}/services/collector"
     headers = {"Authorization": f"Splunk {SPLUNK_TOKEN}"}
     # Insert user tagging into the data object before sending
-    data["user"] = os.getenv('LAB_USER_ID', 'shared')
+    data["user"] = LAB_USER_ID
     
     payload = {
         "event": data,

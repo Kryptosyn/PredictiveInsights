@@ -9,7 +9,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install required telemetry libraries
-# Using --break-system-packages for this lab environment to ensure simplicity
 RUN pip3 install requests splunk-sdk --break-system-packages
 
-USER coder
+# Copy and setup initialization script
+COPY utils/init-users.sh /usr/local/bin/init-users.sh
+RUN chmod +x /usr/local/bin/init-users.sh
+
+# Use the initialization script as the entrypoint
+# It MUST end with 'exec "$@"' to run the CMD
+ENTRYPOINT ["/usr/local/bin/init-users.sh"]
+
+# Default command from the base image (adjusted for the project path)
+CMD ["/usr/bin/entrypoint.sh", "--bind-addr", "0.0.0.0:8080", "--auth", "password", "/home/coder/project"]

@@ -2,3 +2,5 @@ fastmcp
 requests
 urllib3
 mcp
+fastapi
+uvicorn

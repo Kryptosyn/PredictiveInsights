@@ -32,6 +32,7 @@ Once the pipeline is running, all services are accessible via the **Unified Gate
 - **Open WebUI**: [http://localhost/](http://localhost/)
 - **Splunk Dashboard**: [http://localhost/splunk/](http://localhost/splunk/)
 - **Web IDE**: [http://localhost/ide/](http://localhost/ide/)
+- **Splunk MCP (Remote)**: [https://roosevelt-nonentreating-paler.ngrok-free.dev/mcp/sse](https://roosevelt-nonentreating-paler.ngrok-free.dev/mcp/sse)
 
 ### Secure Remote Access (Ngrok)
 If Ngrok is enabled, use the public URL provided in the terminal or Ngrok dashboard:

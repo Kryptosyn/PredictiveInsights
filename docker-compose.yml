@@ -57,7 +57,7 @@ services:
     command: --auth password
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:main
+    image: ghcr.io/open-webui/open-webui:v0.8.12
     container_name: open_webui
     ports:
       - "3000:8080"
@@ -88,6 +88,8 @@ services:
       - LLM_PROVIDER=ollama
       - LLM_MODEL=gemma3:1b
       - FASTMCP_HOST=0.0.0.0
+    volumes:
+      - ./splunk_mcp:/app
     depends_on:
       - splunk
 

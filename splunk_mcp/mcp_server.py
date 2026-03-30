@@ -1,100 +1,61 @@
 import os
-import requests
 import json
 import time
-import datetime
+import requests
 import threading
-import uuid
-import sys
-import urllib3
+import datetime
 from mcp.server.fastmcp import FastMCP
-
-# Disable insecure request warnings for local Splunk instances
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+from starlette.responses import JSONResponse, RedirectResponse
+from starlette.routing import Route
+from starlette.middleware.hosts import TrustedHostMiddleware
 
 # Initialize FastMCP
-mcp = FastMCP("Splunk", host="0.0.0.0")
+mcp = FastMCP("Splunk")
 
-# Configuration from environment variables
-SPLUNK_URL = os.getenv('SPLUNK_URL', 'https://localhost:8089')
-SPLUNK_USER = os.getenv('SPLUNK_USER', 'admin')
-SPLUNK_PASSWORD = os.getenv('SPLUNK_PASSWORD', 'ChangedPassword123')
-SPLUNK_HEC_TOKEN = os.getenv('SPLUNK_HEC_TOKEN')
+SPLUNK_URL = os.getenv("SPLUNK_URL", "https://splunk:8089")
+SPLUNK_USER = os.getenv("SPLUNK_USER", "admin")
+SPLUNK_PASSWORD = os.getenv("SPLUNK_PASSWORD", "LabPassword123")
+SPLUNK_HEC_URL = os.getenv("SPLUNK_HEC_URL", "https://splunk:8088/services/collector")
+SPLUNK_HEC_TOKEN = os.getenv("SPLUNK_HEC_TOKEN", "")
 
-# LLM Metadata for Telemetry
-LLM_PROVIDER = os.getenv('LLM_PROVIDER', 'anthropic')
-LLM_MODEL = os.getenv('LLM_MODEL', 'claude-3-5-sonnet')
-
-def send_telemetry(tool_name: str, duration: float, input_str: str = "", output_str: str = "", status: str = "success"):
-    """Sends tool execution telemetry to Splunk HEC with estimated token counts and cost."""
+def send_telemetry(tool_name, duration_ms, query, results, status="success"):
     try:
-        url = f"{SPLUNK_URL.replace(':8089', ':8088')}/services/collector"
-        headers = {"Authorization": f"Splunk {SPLUNK_HEC_TOKEN}"}
-        
-        trace_id = str(uuid.uuid4()).replace('-', '')
-        
-        # Estimate tokens (approx 4 characters per token)
-        input_tokens = len(input_str) // 4
-        output_tokens = len(output_str) // 4
-        total_tokens = input_tokens + output_tokens
-        
-        # Estimated Cost
-        if LLM_PROVIDER.lower() in ['ollama', 'local']:
-            total_cost = 0.0
-        else:
-            input_cost = (input_tokens / 1_000_000) * 3.00
-            output_cost = (output_tokens / 1_000_000) * 15.00
-            total_cost = input_cost + output_cost
-        
-        metrics = {
-            "gen_ai.system": LLM_PROVIDER,
-            "gen_ai.request.model": LLM_MODEL,
-            "gen_ai.client.duration": duration,
-            "gen_ai.usage.input_tokens": input_tokens,
-            "gen_ai.usage.output_tokens": output_tokens,
-            "gen_ai.usage.total_tokens": total_tokens,
-            "gen_ai.usage.cost": total_cost,
-            "model_name": LLM_MODEL,
-            "provider": LLM_PROVIDER,
-            "span_type": "LLM",
-            "tool_name": tool_name,
-            "status": status,
-            "input_tokens": input_tokens,
-            "output_tokens": output_tokens,
-            "estimated_cost": total_cost,
-            "duration_ms": duration,
-            "trace_id": trace_id,
-            "span_id": str(uuid.uuid4()).replace('-', '')[:16],
-            "user": os.getenv('LAB_USER_ID', 'admin'),
-            "timestamp": datetime.datetime.utcnow().isoformat()
-        }
-        
         payload = {
+            "time": time.time(),
+            "host": "splunk_mcp",
+            "source": "mcp_server",
+            "sourcetype": "genai:mcp:trace",
             "index": "genai_traces",
-            "event": metrics,
-            "sourcetype": "genai:trace"
+            "event": {
+                "tool": tool_name,
+                "duration_ms": duration_ms,
+                "query": query,
+                "status": status,
+                "user": os.getenv("LAB_USER_ID", "admin"),
+                "timestamp": datetime.datetime.utcnow().isoformat()
+            }
         }
-        
-        response = requests.post(url, headers=headers, json=payload, verify=False, timeout=5, proxies={"http": None, "https": None})
-        response.raise_for_status()
-    except Exception as e:
-        print(f"Error sending telemetry: {e}", file=sys.stderr)
+        headers = {"Authorization": f"Splunk {SPLUNK_HEC_TOKEN}"}
+        requests.post(SPLUNK_HEC_URL, headers=headers, json=payload, verify=False, timeout=2)
+    except:
+        pass
 
 @mcp.tool()
 def search_splunk(query: str) -> str:
     """
-    Search Splunk with RAW SPL ONLY (Splunk Search Language). 
-    DO NOT pass natural language. 
-    Example VALID queries: 'index=main', '| head 5', 'index=main sourcetype="cisco:nexus:9000:telemetry"'.
+    Search Splunk for telemetry and logs using SPL. 
+    Use this to investigate infrastructure health, GenAI traces, or security events.
     """
-    search_url = f"{SPLUNK_URL}/services/search/jobs"
     start_time = time.time()
-    status = "success"
     results = ""
-
-    # --- AGGRESSIVE NL SANITIZER ---
+    status = "success"
+    
+    search_url = f"{SPLUNK_URL}/services/search/jobs"
+    
+    # --- HARDENING ---
     conversational_prefixes = [
-        "search splunk for", "check splunk for", "what is the", "what are the", 
+        "please search for", "search for", "can you search", "check splunk for",
+        "find events related to", "show me logs for", "get telemetry for",
         "can you check", "tell me about", "look for", "latest telemetry for",
         "show me", "get me", "find", "search for"
     ]
@@ -116,7 +77,6 @@ def search_splunk(query: str) -> str:
     
     if not query or (len(query.split()) > 10 and "|" not in query and "=" not in query):
         query = "index=main | head 5"
-    # --- END HARDENING ---
 
     data = {
         "search": f"search {query} | eval user=\"{os.getenv('LAB_USER_ID', 'admin')}\"",
@@ -143,5 +103,49 @@ def search_splunk(query: str) -> str:
             daemon=True
         ).start()
 
+# Use FastMCP's sse_app() which provides a Starlette app for SSE
+app = mcp.sse_app()
+
+# Apply TrustedHostMiddleware to allow ANY host header
+# This fixes "421 Misdirected Request" / "Invalid Host header" errors
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
+
+# Starlette endpoint for openapi.json
+async def sse_openapi_json(request):
+    return JSONResponse({
+        "openapi": "3.0.0",
+        "info": {"title": "Splunk MCP", "version": "1.0.0"},
+        "paths": {
+            "/tools/search_splunk": {
+                "post": {
+                    "summary": "Search Splunk",
+                    "operationId": "search_splunk",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {"query": {"type": "string"}},
+                                    "required": ["query"]
+                                }
+                            }
+                        }
+                    },
+                    "responses": {"200": {"description": "OK"}}
+                }
+            }
+        }
+    })
+
+async def root_redirect(request):
+    return RedirectResponse(url="/sse")
+
+# Manually add routes to the Starlette app
+app.routes.append(Route("/openapi.json", endpoint=sse_openapi_json, methods=["GET"]))
+app.routes.append(Route("/sse/openapi.json", endpoint=sse_openapi_json, methods=["GET"]))
+app.routes.append(Route("/", endpoint=root_redirect, methods=["GET"]))
+
 if __name__ == "__main__":
-    mcp.run(transport='sse')
+    import uvicorn
+    # Use proxy headers to avoid 421 Misdirected Request errors in Docker/Nginx
+    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, forwarded_allow_ips="*")

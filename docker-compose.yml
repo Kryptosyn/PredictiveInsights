@@ -1,0 +1,123 @@
+services:
+  splunk:
+    image: splunk/splunk:latest
+    platform: linux/amd64
+    container_name: splunk
+    user: root
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_HEC_ENABLE=1
+    ports:
+      - "8000:8000" # Web UI
+      - "8088:8088" # HEC API
+      - "8089:8089" # Management API
+      - "9997:9997" # Splunk forwarder
+      - "1514:1514" # Syslog
+    volumes:
+      - splunk_data:/opt/splunk/var
+      - splunk_etc:/opt/splunk/etc
+      - ./splunk/etc/apps/splunk_genai_observability:/opt/splunk/etc/apps/splunk_genai_observability
+      - ./splunk/etc/apps/splunk_app_for_splunk_o11y_cloud:/opt/splunk/etc/apps/splunk_app_for_splunk_o11y_cloud
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - /Users/micdemar/.ollama:/root/.ollama
+
+  telemetry-producer:
+    build:
+      context: .
+      dockerfile: utils/Dockerfile.telemetry
+    container_name: telemetry_producer
+    depends_on:
+      - splunk
+    environment:
+      - SPLUNK_HOST=splunk
+      - SPLUNK_PORT=8088
+      - SPLUNK_TOKEN=${SPLUNK_HEC_TOKEN}
+      - PYTHONUNBUFFERED=1
+
+  code-server:
+    build:
+      context: .
+      dockerfile: utils/Dockerfile.ide
+    container_name: code_server
+    environment:
+      - PASSWORD=LabPassword123
+      - SUDO_PASSWORD=LabPassword123
+    volumes:
+      - .:/home/coder/project
+    user: "1000:1000"
+    command: --auth password
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open_webui
+    ports:
+      - "3000:8080"
+    environment:
+      - 'OLLAMA_BASE_URL=http://host.docker.internal:11435'
+      - 'WEBUI_AUTH=True'
+      - 'ENABLE_SIGNUP=True'
+      - 'ENABLE_PERSISTENT_CONFIG=False'
+      - 'DEFAULT_USER_ROLE=user'
+      - 'WEBUI_URL=https://roosevelt-nonentreating-paler.ngrok-free.dev'
+      - 'DEFAULT_MODELS=gemma3:1b'
+      - 'ENABLE_MODEL_WHITELIST=False'
+    volumes:
+      - open_webui_data:/app/backend/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  splunk-mcp:
+    build:
+      context: ./splunk_mcp
+    container_name: splunk_mcp
+    environment:
+      - SPLUNK_URL=https://splunk:8089
+      - SPLUNK_USER=admin
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - LAB_USER_ID=shared
+      - LLM_PROVIDER=ollama
+      - LLM_MODEL=gemma3:1b
+      - FASTMCP_HOST=0.0.0.0
+    depends_on:
+      - splunk
+
+  gateway:
+    image: nginx:latest
+    container_name: lab_gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - splunk
+      - code-server
+      - splunk-mcp
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok_tunnel
+    restart: unless-stopped
+    command:
+      - "http"
+      - "gateway:80"
+      - "--domain=roosevelt-nonentreating-paler.ngrok-free.dev"
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    depends_on:
+      - gateway
+
+volumes:
+  splunk_data:
+  splunk_etc:
+  ollama_data:
+  open_webui_data:

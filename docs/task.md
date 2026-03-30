@@ -1,0 +1,35 @@
+# Task: Digital Twin Lab Development
+
+- [x] Research and Design Lab Architecture
+    - [x] Research Cisco Nexus 9000 telemetry integration with Splunk
+    - [x] Research Cisco ThousandEyes API/Integration with Splunk
+    - [x] Research Splunk Machine Data Lake AWS setup
+    - [x] Design data flow for Digital Twin (Telemetry -> Data Lake -> Ollama)
+    - [x] Draft Implementation Plan
+- [x] Environment Setup
+    - [x] Initialize local repository structure
+    - [x] Configure local Ollama environment
+    - [/] Plan AWS S3/Splunk Data Lake integration
+- [x] Data Integration & Automation
+    - [x] Script telemetry collection from Nexus 9000 (Mock/Lab data)
+    - [x] Set up ThousandEyes synthetic data stream
+    - [x] Implement data ingestion into Splunk Machine Data Lake (AWS)
+- [x] Predictive Insights Engineering
+    - [x] Develop Ollama prompts/RAG for failure forecasting
+    - [x] Integrate Splunk Observability for real-time monitoring
+- [x] Lab Orchestration & UI
+    - [x] Create automation scripts (Ansible/Terraform)
+    - [x] Build AI Canvas/Defense integration logic
+- [x] Verification & Demo
+    - [x] Verify real-time failure forecasting
+    - [x] Create walkthrough documentation
+- [x] Project Refinement
+    - [x] Generate logical topology diagram
+- [x] GenAI Observability
+    - [x] Integrate "GenAI Observability for Splunk" app
+    - [x] Update predictive_engine.py with OTel metrics
+    - [x] Create GenAI setup documentation
+- [x] Lab Portability & Remote Access
+    - [x] Create portability_and_remote_access.md
+- [x] Documentation Enhancement
+    - [x] Add Business Executive Summary to walkthrough.md

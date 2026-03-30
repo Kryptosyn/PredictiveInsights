@@ -1,0 +1,18 @@
+# Splunk Token Observability Dashboard (SPL Queries)
+
+## 1. Total Token Consumption Over Time
+index=main sourcetype="ollama:tokens"
+| timechart sum(total_tokens) by model
+
+## 2. Average Latency vs. Token Count
+index=main sourcetype="ollama:tokens"
+| stats avg(total_duration_ms) as AvgLatency, avg(total_tokens) as AvgTokens by model
+
+## 3. Estimated Cost Attribution (Example: $0.10 per 1k tokens)
+index=main sourcetype="ollama:tokens"
+| eval cost = (total_tokens / 1000) * 0.10
+| stats sum(cost) as TotalCost by model
+
+## 4. Input vs Output Token Ratio
+index=main sourcetype="ollama:tokens"
+| stats sum(prompt_tokens) as InputTokens, sum(completion_tokens) as OutputTokens

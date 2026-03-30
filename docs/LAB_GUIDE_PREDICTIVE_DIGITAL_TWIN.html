@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LAB_GUIDE_PREDICTIVE_DIGITAL_TWIN.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="lab-guide---digital-twin-predictive-insights">Lab Guide - Digital Twin: Predictive Insights</h1>
+<h2 id="1-executive-summary-the-shift-to-proactive-operations">1. Executive Summary: The Shift to Proactive Operations</h2>
+<p>Modern network infrastructure is too complex for traditional, reactive troubleshooting. The &quot;Digital Twin&quot; approach shifts the paradigm from <strong>investigating what broke</strong> to <strong>predicting what will break next</strong>.</p>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>The Cisco Advantage</strong>: In a world where every other vendor was still chasing outages, Cisco is preventing them.</p>
+</blockquote>
+<h3 id="the-cisco-advantage-full-stack-telemetry">The Cisco Advantage: Full-Stack Telemetry</h3>
+<p>This lab leverages a unique telemetry foundation that only Cisco can provide. By combining <strong>Nexus 9000</strong> as the physical transport layer, <strong>ThousandEyes</strong> for path intelligence beyond the campus, and <strong>Isovalent (Cilium)</strong> for eBPF-powered flow visibility, we create a high-fidelity &quot;Digital Twin&quot; of your environment.</p>
+<h3 id="local-ai-sovereignty">Local AI Sovereignty</h3>
+<p>Unlike public cloud solutions that introduce latency, security risks, and unpredictable costs, this lab uses <strong>Local AI (Ollama/Llama3)</strong> running natively on the host Mac to leverage <strong>GPU (Metal) acceleration</strong>.</p>
+<ul>
+<li><strong>Security</strong>: Your sensitive network metadata never leaves your controlled environment.</li>
+<li><strong>Cost Efficiency</strong>: By hosting the AI locally, operations teams realize over <strong>95% cost savings</strong> compared to commercial LLM token pricing.</li>
+<li><strong>Scalability</strong>: The lab is designed for <strong>Multi-user Isolation</strong>, where every query and telemetry trace is tagged with a unique <code>user_id</code>, allowing distinct dashboard views for multiple participants.</li>
+</ul>
+<h3 id="the-data-foundation-preparing-for-ai">The Data Foundation: Preparing for AI</h3>
+<p>A successful AI digital twin relies heavily on the quality, structure, and accessibility of its underlying data. Aligning with industry practices like the <strong>CRISP-DM</strong> (Cross-Industry Standard Process for Data Mining) framework, this lab highlights that robust <em>data collection, preparation, and efficient querying</em> are the most critical prerequisites for AI success. High-fidelity telemetry ensures that the AI is reasoning over an accurate, holistic view of the environment, enabling precise predictive outcomes and actionable operational insights.</p>
+<h3 id="lab-highlights-at-a-glance">Lab Highlights at a Glance</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Feature</th>
+<th style="text-align:left">Advantage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Local LLM</strong></td>
+<td style="text-align:left">Privacy, zero-cost tokens, low latency via GPU acceleration.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>MCP Gateway</strong></td>
+<td style="text-align:left">Simplifies complex data retrieval via natural language.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Predictive Engine</strong></td>
+<td style="text-align:left">Shifts operations from reactive to proactive (pre-outage insights).</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>AI Defense</strong></td>
+<td style="text-align:left">Audits AI logic and prevents unauthorized configuration changes.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>GenAI Observability</strong></td>
+<td style="text-align:left">Provides financial and performance tracking for AI agents.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="2-lab-access--credentials">2. Lab Access &amp; Credentials</h2>
+<p>To participate in the lab, you will use a single gateway URL to access all services.</p>
+<h3 id="service-urls"><strong>Service URLs</strong></h3>
+<ul>
+<li><strong>Premium Chat (Open WebUI)</strong>: <a href="https://roosevelt-nonentreating-paler.ngrok-free.dev/">https://roosevelt-nonentreating-paler.ngrok-free.dev/</a></li>
+<li><strong>Data Lake (Splunk)</strong>: <a href="https://roosevelt-nonentreating-paler.ngrok-free.dev/splunk/">https://roosevelt-nonentreating-paler.ngrok-free.dev/splunk/</a></li>
+<li><strong>Web IDE (Code-Server)</strong>: <a href="https://roosevelt-nonentreating-paler.ngrok-free.dev/ide/">https://roosevelt-nonentreating-paler.ngrok-free.dev/ide/</a></li>
+</ul>
+<h3 id="login-information"><strong>Login Information</strong></h3>
+<p>Participants should use their assigned <strong>User ID</strong> (e.g., <code>user01</code>) for all services.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Field</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Email Format</strong></td>
+<td style="text-align:left"><code>userXX@cisco.com</code> (e.g., <code>user01@cisco.com</code>)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Password</strong></td>
+<td style="text-align:left"><code>CiscoLab2026!</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>IDE Password</strong></td>
+<td style="text-align:left"><code>LabPassword123</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>Data Isolation</strong>: Always ensure you use your assigned <code>userXX</code> login. This ensures your telemetry data and AI &quot;thoughts&quot; are isolated from other participants.</p>
+</blockquote>
+<hr>
+<h2 id="3-logical-architecture-end-to-end-insights">3. Logical Architecture: End-to-End Insights</h2>
+<pre><code class="language-mermaid"><div class="mermaid">graph TD
+    subgraph "A. Infrastructure Stack (Telemetry Sources)"
+        NX[Cisco Nexus 9000] -- "CPU/Int Metrics" --> SF[Splunk Forwarder]
+        TE[ThousandEyes] -- "Path Intelligence" --> SF
+        ISO[Isovalent/Cilium] -- "eBPF Flow Visibility" --> SF
+    end
+
+    subgraph "B. Data Stack (The Intelligence Hub)"
+        SF --> SP[Splunk Enterprise]
+        SP -- "Historical Patterns" --> PE[Predictive Engine]
+        SP -- "GenAI Traces" --> GAO[GenAI Observability Dashboard]
+    end
+
+    subgraph "C. Intelligence Stack (Local AI)"
+        PE -- "Analyze" --> OL[Ollama / Gemma 3:1B]
+        OL -- "Predictive Forecast" --> PE
+        MCP[MCP Gateway] -- "Search (SPL)" --> SP
+    end
+
+    subgraph "D. Interface Stack (Optional MCP Clients)"
+        CW[Open WebUI] -- "Natural Language" --> MCP
+        CD[Claude Desktop] -- "Natural Language" --> MCP
+    end
+
+    classDef agent fill:#f96,stroke:#333,stroke-width:2px;
+    class PE,MCP agent;
+    class SP fill:#6ef,stroke:#333,stroke-width:2px;
+</div></code></pre>
+<hr>
+<h2 id="2-the-telemetry-foundation-full-stack-visibility">2. The Telemetry Foundation: Full-Stack Visibility</h2>
+<p>Before the AI can predict failures, the Digital Twin must be synchronized with reality. In this section, you will verify the ingestion of three critical data streams into your <strong>Splunk Enterprise</strong> data lake.</p>
+<h3 id="verifying-the-data-streams">Verifying the Data Streams</h3>
+<ol>
+<li><strong>Open the Splunk Dashboard</strong>: Navigate to the &quot;Digital Twin Overview&quot; app.</li>
+<li><strong>Nexus 9000 Telemetry</strong>: Verify real-time CPU and interface load metrics from your switches.</li>
+<li><strong>ThousandEyes Path Intelligence</strong>: Monitor path latency and loss percentages for critical application traffic.</li>
+<li><strong>Isovalent Security Flows</strong>: Observe deep flow visibility into service-to-service communication.</li>
+</ol>
+<blockquote>
+<p>[!NOTE]
+All telemetry is indexed automatically. The AI uses these historical patterns to build a baseline for &quot;normal&quot; behavior before identifying anomalies.</p>
+</blockquote>
+<hr>
+<h2 id="3-generating-predictive-insights">3. Generating Predictive Insights</h2>
+<p>In this module, you will activate the <strong>Predictive Engine</strong>. This AI-driven script acts as an &quot;Investigative Assistant,&quot; scanning telemetry for patterns that precede actual outages—such as interface degradation combined with rising application latency.</p>
+<h3 id="running-the-predictive-analysis">Running the Predictive Analysis</h3>
+<p>From your terminal, execute the following:</p>
+<pre class="hljs"><code><div>python3 predictive_engine.py
+</div></code></pre>
+<h3 id="sample-predictive-insight-report">Sample Predictive Insight Report</h3>
+<p>The AI will generate a report similar to the following:</p>
+<pre class="hljs"><code><div>### [PREDICTIVE ALERT] Interface eth1/2 on nexus-9000-01 ###
+Severity: High
+Confidence: 87%
+
+OBSERVATION: Observed a 15% increase in interface errors over the last 10 minutes, 
+correlated with a 40ms latency spike in ThousandEyes path telemetry.
+
+PROJECTION: Interface failure is likely within the next 2 hours. Service impact 
+will be critical for vlan-200 application traffic.
+
+RECOMMENDATION: Pre-emptively proactive failover to path B and inspect physical SFP on eth1/2.
+</div></code></pre>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>No-SPL Required</strong>: Notice that the engine generated this report without you ever writing a Splunk search query. The AI identified the &quot;pre-failure&quot; pattern by reasoning over the raw metrics directly.</p>
+</blockquote>
+<hr>
+<h2 id="4-natural-language-investigation-the-mcp-moment">4. Natural Language Investigation: The MCP Moment</h2>
+<p>The <strong>Model Context Protocol (MCP)</strong> acts as a &quot;Universal Translator.&quot; It allows you to talk to your infrastructure in plain English, while the AI handles the complex translation to Splunk Search Processing Language (SPL) in the background.</p>
+<h3 id="the-investigative-assistant">The Investigative Assistant</h3>
+<p>You will use the <strong>Splunk AI Analyst</strong> to probe deeper into the environment health. Because of the MCP gateway, the AI can &quot;reach&quot; into Splunk, fetch the data, and summarize it for you.</p>
+<h3 id="try-these-investigative-prompts">Try These Investigative Prompts:</h3>
+<h4 id="stage-1-system-overview"><strong>Stage 1: System Overview</strong></h4>
+<ul>
+<li><em>&quot;Check Splunk for the most recent events in the main index. What source types are sending data?&quot;</em></li>
+<li><em>&quot;Summarize the current health status of all Nexus 9000 switches based on the latest telemetry.&quot;</em></li>
+<li><em>&quot;Show me a list of the top 5 interfaces with the highest CPU or traffic load in the last 15 minutes.&quot;</em></li>
+</ul>
+<h4 id="stage-2-troubleshooting--correlation"><strong>Stage 2: Troubleshooting &amp; Correlation</strong></h4>
+<ul>
+<li><em>&quot;Are there any correlation between rising interface errors on my switches and ThousandEyes latency spikes?&quot;</em></li>
+<li><em>&quot;Check for any 'Security Violation' events from Cisco AI Defense. Did they impact any network performance?&quot;</em></li>
+<li><em>&quot;Search for Nexus telemetry where CPU usage is over 80%. Is this causing any dropped flows in Isovalent (Hubble)?&quot;</em></li>
+</ul>
+<h4 id="stage-3-predictive-analysis"><strong>Stage 3: Predictive Analysis</strong></h4>
+<ul>
+<li><em>&quot;Based on the interface error trends in Splunk, which port is most likely to fail in the next hour?&quot;</em></li>
+<li><em>&quot;Analyze the ThousandEyes path data. Is our current latency issue originating inside the campus or at the ISP level?&quot;</em></li>
+<li><em>&quot;Look at the Isovalent flow logs. Are there any unexpected 'REJECTED' verdicts coinciding with the Nexus CPU spikes?&quot;</em></li>
+</ul>
+<blockquote>
+<p>[!TIP]
+<strong>Read-Only Trust</strong>: The AI acts purely as an investigative assistant. It can see everything, but it cannot change your configurations. This preserves &quot;Operational Sovereignty&quot; while accelerating your Mean Time to Identification (MTTI).</p>
+</blockquote>
+<hr>
+<h2 id="5-the-safety-shield-cisco-ai-defense">5. The Safety Shield: Cisco AI Defense</h2>
+<p>Every &quot;thought&quot; and action taken by the AI is audited. To maintain absolute operational trust, <strong>Cisco AI Defense</strong> inspects all prompt inputs and outputs for security violations.</p>
+<h3 id="auditing-the-ai">Auditing the AI</h3>
+<ol>
+<li><strong>View Security Logs</strong>: In Splunk, search the <code>cisco:ai:defense</code> sourcetype.</li>
+<li><strong>Inspect Violations</strong>: Look for how AI Defense blocks unauthorized attempts to access sensitive device credentials or system files.</li>
+<li><strong>Verify Observability</strong>: Observe the <code>genai_traces</code> index to see the exact logic the AI used, including the SPL queries it generated on your behalf.</li>
+</ol>
+<hr>
+<h2 id="6-genai-observability-tracking-agent-performance">6. GenAI Observability: Tracking Agent Performance</h2>
+<p>As AI agents become a core part of your operational strategy, monitoring their performance, cost, and token usage is critical. The <strong>GenAI Observability</strong> dashboard in Splunk provides a comprehensive view of your AI fleet's health and economics.</p>
+<h3 id="monitoring-cost-and-tokens">Monitoring Cost and Tokens</h3>
+<ol>
+<li><strong>Open the GenAI Observability Dashboard</strong>: Navigate to the GenAI Observability app in Splunk.</li>
+<li><strong>View Token Metrics</strong>: Monitor the total number of input and output tokens generated by your AI agents in real-time. This helps you understand the operational load and efficiency of your prompts.</li>
+<li><strong>Track Cost Accumulation</strong>: Review the real-time cost analysis. By tracking the cost per token for your specific models, the dashboard provides a clear picture of the financial impact of your AI operations, allowing you to optimize usage and prevent billing surprises.</li>
+<li><strong>Analyze Agent Efficiency</strong>: Correlate token usage and cost with the number of successful investigations to measure the ROI of your AI initiatives.</li>
+</ol>
+<blockquote>
+<p>[!TIP]
+Keep a close eye on the &quot;Cost per Query&quot; metrics. High token usage on simple queries might indicate a need to refine your prompts or switch to a more efficient model configuration.</p>
+</blockquote>
+<hr>
+<h2 id="7-conclusion-the-business-value-of-proactive-ops">7. Conclusion: The Business Value of Proactive Ops</h2>
+<p>By the end of this lab, you have moved from a reactive state to a proactive digital twin.</p>
+<ul>
+<li><strong>Downtime Prevented</strong>: By acting on predictive insights before they become outages, teams can reduce MTTR by up to 80%.</li>
+<li><strong>Operational Efficiency</strong>: The AI eliminates the need for manual, SPL-based log diving, allowing senior engineers to focus on architecture rather than investigation.</li>
+<li><strong>Infrastructure Value</strong>: You are proving that the value of Cisco hardware extends beyond connectivity—it is a rich source of intelligence that powers the future of autonomous operations.</li>
+</ul>
+<hr>
+<h2 id="8-choosing-your-interface-lab-access-points">8. Choosing Your Interface: Lab Access Points</h2>
+<p>As detailed in <strong>Section 2 (Lab Access &amp; Credentials)</strong>, you have three primary ways to interact with the Digital Twin environment.</p>
+<h3 id="1-open-webui-premium-chat"><strong>1. Open WebUI (Premium Chat)</strong></h3>
+<p>The primary interface for NLP-to-Splunk investigations.</p>
+<ul>
+<li><strong>URL</strong>: <a href="https://roosevelt-nonentreating-paler.ngrok-free.dev/">https://roosevelt-nonentreating-paler.ngrok-free.dev/</a></li>
+<li><strong>Action</strong>: Simply ask questions like <em>&quot;What is the current health of my Nexus switches?&quot;</em>.</li>
+</ul>
+<h3 id="2-web-based-ide-zero-installation"><strong>2. Web-Based IDE (Zero Installation)</strong></h3>
+<p>The development environment for running telemetry scripts.</p>
+<ul>
+<li><strong>URL</strong>: <a href="https://roosevelt-nonentreating-paler.ngrok-free.dev/ide/">https://roosevelt-nonentreating-paler.ngrok-free.dev/ide/</a></li>
+<li><strong>Action</strong>: Run <code>python3 telemetry_producer.py</code> to generate live network data.</li>
+</ul>
+<h3 id="3-data-lake-splunk-enterprise"><strong>3. Data Lake (Splunk Enterprise)</strong></h3>
+<p>The source of truth for all metrics and AI audits.</p>
+<ul>
+<li><strong>URL</strong>: <a href="https://roosevelt-nonentreating-paler.ngrok-free.dev/splunk/">https://roosevelt-nonentreating-paler.ngrok-free.dev/splunk/</a></li>
+<li><strong>Action</strong>: View the <strong>Digital Twin Overview</strong> app to see real-time dashboards.</li>
+</ul>
+<blockquote>
+<p>[!TIP]
+All interfaces are synchronized. A search query in the Chat UI will appear as an audit trace in Splunk, and telemetry generated in the IDE will immediately appear in the Splunk dashboards.</p>
+</blockquote>
+
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>portability_and_remote_access.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="lab-portability--remote-access-guide">Lab Portability &amp; Remote Access Guide</h1>
+<p>This document explains how to move the <strong>Digital Twin: Predictive Insights</strong> lab to a new machine and how to open it up for remote users.</p>
+<h2 id="1-portability-running-on-a-new-machine">1. Portability: Running on a New Machine</h2>
+<p>To ensure the lab behaves the same way on a different computer, follow these steps:</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li><strong>Docker &amp; Docker Compose</strong>: Installed and running.</li>
+<li><strong>Python 3.9+</strong>: For running the predictive engine locally.</li>
+<li><strong>Hardware</strong>: At least 8GB RAM (16GB recommended for Ollama/Llama3).</li>
+</ul>
+<blockquote>
+<p>[!CAUTION]
+<strong>Permission Pitfall (Cloud Sync)</strong>: Do NOT run this lab inside a folder synced by <strong>OneDrive, Dropbox, or iCloud</strong>. Docker volumes mounted from these locations often suffer from &quot;Permission Denied&quot; errors because the cloud provider and Docker fight over file ownership.</p>
+</blockquote>
+<h3 id="step-by-step-migration">Step-by-Step Migration</h3>
+<ol>
+<li><strong>Transfer the Directory</strong>: Copy the entire <code>Predictive Insights</code> folder to the target machine.
+<ul>
+<li><strong>Best Practice</strong>: Place the folder in a local, non-synced directory (e.g., <code>~/Documents/Lab/</code> or <code>/Users/YourUser/Lab/</code>).</li>
+</ul>
+</li>
+<li><strong>Initialize Environment</strong>:<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> <span class="hljs-string">"Predictive Insights"</span>
+python3 -m venv venv
+<span class="hljs-built_in">source</span> venv/bin/activate
+pip install -r requirements.txt
+</div></code></pre>
+</li>
+<li><strong>Start Infrastructure</strong>:<pre class="hljs"><code><div>docker-compose up -d
+</div></code></pre>
+</li>
+<li><strong>Pull AI Model</strong>:<pre class="hljs"><code><div>docker <span class="hljs-built_in">exec</span> -it ollama ollama pull llama3
+</div></code></pre>
+</li>
+<li><strong>Ollama Connectivity</strong>:
+<ul>
+<li>The lab expects Ollama at <code>localhost:11434</code>.</li>
+<li>If you see connection errors on your host terminal, ensure <code>OLLAMA_HOST</code> is either unset or set to <code>127.0.0.1:11434</code>.</li>
+<li><strong>Fix</strong>: <code>unset OLLAMA_HOST</code> before running the Python scripts.</li>
+</ul>
+</li>
+<li><strong>Run Engines</strong>:
+<ul>
+<li>Start the telemetry producer (if using Docker, it starts automatically).</li>
+<li>Run the predictive engine: <code>python predictive_engine.py</code>.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="2-remote-access-opening-the-lab-to-users">2. Remote Access: Opening the Lab to Users</h2>
+<p>To allow other users to access your Splunk dashboards and the Predictive Insights lab remotely, use one of the following methods:</p>
+<h3 id="method-a-local-network-access-easiest">Method A: Local Network Access (Easiest)</h3>
+<p>If users are on the same WiFi/VPN:</p>
+<ol>
+<li>Find your Local IP: <code>ifconfig | grep &quot;inet &quot;</code> (macOS).</li>
+<li>Users can access Splunk at <code>http://&lt;YOUR_IP&gt;:8000</code>.</li>
+<li><strong>Security Note</strong>: Change the Splunk admin password from <code>ChangedPassword123</code> to something unique.</li>
+</ol>
+<h3 id="method-b-secure-tunneling-ngrokcloudflare">Method B: Secure Tunneling (ngrok/Cloudflare)</h3>
+<p>If you want to expose the lab over the internet without modifying router settings:</p>
+<ol>
+<li><strong>Install ngrok</strong>: <code>brew install ngrok</code>.</li>
+<li><strong>Expose Splunk</strong>: <code>ngrok http 8000</code>.</li>
+<li><strong>Provide the URL</strong>: Share the generated <code>https://xxxx.ngrok-free.app</code> link.
+<blockquote>
+<p>[!WARNING]
+Monitoring telemetry and AI logs over a public tunnel should only be done for demos. Do not use for production data.</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="method-c-tailscale-recommended-for-private-access">Method C: Tailscale (Recommended for Private Access)</h3>
+<ol>
+<li>Install <strong>Tailscale</strong> on your machine and the remote user's machine.</li>
+<li>Your machine will get a private &quot;MagicDNS&quot; name (e.g., <code>my-mac.tailscale.net</code>).</li>
+<li>Users can access the lab at <code>http://my-mac.tailscale.net:8000</code> from anywhere in the world securely.</li>
+</ol>
+<h3 id="method-d-exposing-ollama-advanced">Method D: Exposing Ollama (Advanced)</h3>
+<p>If you want users to run their <em>own</em> predictive engines against your local Ollama:</p>
+<ol>
+<li>Update <code>docker-compose.yml</code> to bind Ollama to <code>0.0.0.0</code>:<pre class="hljs"><code><div><span class="hljs-attr">ollama:</span>
+  <span class="hljs-attr">ports:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">"0.0.0.0:11434:11434"</span>
+</div></code></pre>
+</li>
+<li>Users set their <code>OLLAMA_URL</code> environment variable to <code>http://&lt;YOUR_IP&gt;:11434/api/generate</code>.</li>
+</ol>
+<hr>
+<h2 id="3-multi-tenant-cloud-lab-hosting-zero-footprint">3. Multi-tenant Cloud Lab Hosting (Zero-Footprint)</h2>
+<p>For large-scale workshops or environments where users cannot run Docker locally, the lab can be hosted centrally. This approach prioritizes <strong>Lab Experience</strong> and <strong>Data Isolation</strong>.</p>
+<h3 id="architecture-overview">Architecture Overview</h3>
+<ol>
+<li><strong>Central VM</strong>: One high-spec VM (e.g., 32GB RAM, 16 vCPUs) hosting the entire Docker stack.</li>
+<li><strong>Shared Splunk</strong>: A single Splunk instance with dedicated user accounts for each participant.</li>
+<li><strong>Cloud IDE (Optional)</strong>: Integrate <code>code-server</code> (VS Code in browser) so users can run the Python scripts without any local setup.</li>
+</ol>
+<h3 id="splunk-multi-tenancy-setup">Splunk Multi-tenancy Setup</h3>
+<h4 id="1-user-management">1. User Management</h4>
+<p>Instructors should pre-create participant accounts:</p>
+<ul>
+<li><strong>Path</strong>: <code>Settings &gt; Users</code></li>
+<li><strong>Naming</strong>: <code>participant01</code>, <code>participant02</code>, etc.</li>
+<li><strong>Roles</strong>: Create a custom <code>lab_participant</code> role and assign it to these users.</li>
+</ul>
+<h4 id="2-data-isolation-role-based-search-filters">2. Data Isolation (Role-Based Search Filters)</h4>
+<p>To prevent participants from seeing each other's traces in the shared dashboards:</p>
+<ol>
+<li>Go to <code>Settings &gt; Roles &gt; lab_participant</code>.</li>
+<li>In the <strong>Search Filter</strong> box, add: <code>user=&quot;$user$&quot;</code></li>
+<li><strong>How it works</strong>: Splunk automatically appends <code>AND user=&lt;logged_in_user_name&gt;</code> to every search, ensuring users only see their own telemetry.</li>
+</ol>
+<h3 id="application-integration">Application Integration</h3>
+<p>To support this multi-tenant isolation, the agentic scripts must tag their data:</p>
+<h4 id="predictive-engine-configuration"><strong>Predictive Engine Configuration</strong></h4>
+<p>Users set an environment variable before running:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">export</span> LAB_USER_ID=<span class="hljs-string">"participant01"</span>
+python3 predictive_engine.py
+</div></code></pre>
+<h4 id="the-mcp-component"><strong>The MCP Component</strong></h4>
+<p>The <strong>Splunk MCP Server</strong> (<code>splunk_mcp/mcp_server.py</code>) is the &quot;Translator&quot; for the lab. It acts as a gateway that allows AI agents (like Claude) to query Splunk index data using plain English. In a multi-tenant setup, this component ensures that even natural language queries are scoped to the correct user.</p>
+<p>There are two ways to solve for this in a shared lab:</p>
+<p><strong>Option A: The Cloud IDE (Recommended - Zero Footprint)</strong>
+Participants use the browser-based Web IDE provided by the lab.</p>
+<ol>
+<li>Open the terminal in the Web IDE.</li>
+<li><strong>Splunk AI Analyst CLI</strong>: Run <code>python3 splunk_agent.py &quot;report status&quot;</code>.</li>
+<li><strong>Aha! Moment</strong>: Watch as the agent translates natural language into SPL, searches Splunk, and provides a structured health report (matching the premium &quot;Claude Code&quot; experience).</li>
+<li><strong>Benefit</strong>: No installation (Claude or Docker) required.</li>
+</ol>
+<p><strong>Option B: The Manual Export (The &quot;Aha!&quot; Moment)</strong>
+If participants want to use <strong>Claude Desktop</strong> locally:</p>
+<ol>
+<li><strong>Download Claude</strong>: Participants must download Claude Desktop before the lab.</li>
+<li><strong>Tunnel to MCP</strong>: Use Tailscale to reach the Mac mini's MCP server.</li>
+<li><strong>Configure</strong>: Participants add the remote MCP server to their <code>claude_desktop_config.json</code>:<pre class="hljs"><code><div><span class="hljs-string">"mcpServers"</span>: {
+  <span class="hljs-attr">"splunk"</span>: {
+    <span class="hljs-attr">"command"</span>: <span class="hljs-string">"ssh"</span>,
+    <span class="hljs-attr">"args"</span>: [<span class="hljs-string">"-t"</span>, <span class="hljs-string">"participant01@lab-mac-mini.tailscale.net"</span>, <span class="hljs-string">"source /path/to/venv/bin/activate &amp;&amp; python3 /path/to/mcp_server.py"</span>],
+    <span class="hljs-attr">"env"</span>: { <span class="hljs-attr">"LAB_USER_ID"</span>: <span class="hljs-string">"participant01"</span> }
+  }
+}
+</div></code></pre>
+</li>
+<li><strong>Benefit</strong>: Participants experience the premium &quot;Agency&quot; flow directly in their desktop app.</li>
+</ol>
+<h3 id="instructor-checklist-for-cloud-deployment">Instructor Checklist for Cloud Deployment</h3>
+<ul>
+<li><input type="checkbox" id="checkbox0"><label for="checkbox0"></label><strong>Infrastructure</strong>: Deploy VM to AWS/Azure/Cisco Intersight.</li>
+<li><input type="checkbox" id="checkbox1"><label for="checkbox1"></label><strong>SSL</strong>: Use Nginx + Let's Encrypt for <code>https://splunk.yourlab.com</code>.</li>
+<li><input type="checkbox" id="checkbox2"><label for="checkbox2"></label><strong>Ollama</strong>: Pre-pull <code>llama3</code> and ensure the API is reachable over the private VPC.</li>
+<li><input type="checkbox" id="checkbox3"><label for="checkbox3"></label><strong>Account Provisioning</strong>: Generate a list of login credentials for the classroom.</li>
+</ul>
+<hr>
+<h2 id="4-permanent-lab-hosting-mac-mini--tailscale">4. Permanent Lab Hosting: Mac mini + Tailscale</h2>
+<p>A high-performance <strong>Mac mini (M2/M3)</strong> is the ideal &quot;Permanent Lab&quot; host. It provides the necessary power for Ollama while maintaining a small physical footprint and silent operation. Combining this with <strong>Tailscale</strong> creates a secure, zero-config &quot;Lab-in-a-Box.&quot;</p>
+<h3 id="why-this-configuration">Why this Configuration?</h3>
+<ul>
+<li><strong>Always-On</strong>: The Mac mini can run 24/7 in a lab closet or under a desk.</li>
+<li><strong>Apple Silicon Performance</strong>: The M-series chips are exceptionally efficient at running LLMs like Llama3 via Ollama.</li>
+<li><strong>Secure Mesh Networking</strong>: Tailscale allows users to access the lab from anywhere (even behind NAT/Firewalls) without opening public ports.</li>
+</ul>
+<h3 id="setup-instructions">Setup Instructions</h3>
+<h4 id="1-prepare-the-mac-mini">1. Prepare the Mac mini</h4>
+<ul>
+<li>Install <strong>Docker Desktop</strong> and allocate at least 12GB of RAM to the VM.</li>
+<li>Install <strong>Tailscale</strong> and sign in.</li>
+<li>Enable <strong>&quot;Start Tailscale at Login&quot;</strong> and <strong>&quot;Always-On&quot;</strong> in macOS Settings.</li>
+</ul>
+<h4 id="2-configure-tailscale-%22magicdns%22">2. Configure Tailscale &quot;MagicDNS&quot;</h4>
+<ul>
+<li>In the Tailscale Admin Console, note the <strong>MagicDNS</strong> name of your Mac mini (e.g., <code>lab-mac-mini.tailnet-name.ts.net</code>).</li>
+<li>Users will use this URL to access Splunk and the HEC endpoint.</li>
+</ul>
+<h4 id="3-start-the-multi-tenant-stack">3. Start the Multi-tenant Stack</h4>
+<p>Follow the steps in <a href="#3-multi-tenant-cloud-lab-hosting-zero-footprint">Section 3</a> to start the multi-tenant Docker stack.</p>
+<h4 id="4-participant-access">4. Participant Access</h4>
+<p>Provide participants with:</p>
+<ol>
+<li><strong>Tailscale Invitation</strong>: Ask users to join your Tailnet (or use a shared invite link).</li>
+<li><strong>Splunk URL</strong>: <code>http://lab-mac-mini.tailnet-name.ts.net:8000</code></li>
+<li><strong>HEC Endpoint</strong>: <code>http://lab-mac-mini.tailnet-name.ts.net:8088</code> (for remote agent execution).</li>
+</ol>
+<hr>
+<h2 id="5-fallback-remote-access-via-ngrok">5. Fallback: Remote Access via ngrok</h2>
+<p>If <strong>Tailscale</strong> is blocked by corporate policy (e.g., Cisco Umbrella), <strong>ngrok</strong> provides a reliable fallback for exposing the Splunk dashboard.</p>
+<h3 id="setup-instructions">Setup Instructions</h3>
+<ol>
+<li><strong>Install ngrok</strong>: <code>brew install --cask ngrok</code></li>
+<li><strong>Add Authtoken</strong>: Obtain your token from the <a href="https://dashboard.ngrok.com/">ngrok Dashboard</a> and run:<pre class="hljs"><code><div>ngrok config add-authtoken &lt;YOUR_TOKEN&gt;
+</div></code></pre>
+</li>
+<li><strong>Start Tunnel</strong>: Expose the <strong>Unified Lab Gateway</strong> (Port 80):<pre class="hljs"><code><div><span class="hljs-comment"># Secure start (highly recommended)</span>
+ngrok http 80 --auth <span class="hljs-string">"admin:YourStrongPassword"</span>
+</div></code></pre>
+</li>
+<li><strong>How to Stop</strong>: <code>pkill ngrok</code></li>
+<li><strong>Unified DNA Access</strong>:
+<ul>
+<li><strong>Splunk Dashboard</strong>: <code>https://*.ngrok-free.dev/</code></li>
+<li><strong>Cloud IDE (Web MCP)</strong>: <code>https://*.ngrok-free.dev/ide/</code> (The trailing slash is required).</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>[!TIP]
+<strong>Premium Feel</strong>: This setup allows all lab components to share a single public URL, providing a seamless &quot;Portal&quot; experience for participants.</p>
+</blockquote>
+<blockquote>
+<p>[!CAUTION]
+<strong>Ephemeral URLs</strong>: On the ngrok free tier, the public URL changes every time you restart the service. If you stop the service, you must provide your participants with a new link.</p>
+</blockquote>
+<blockquote>
+<p>[!TIP]
+<strong>Subnet Routing</strong>: For advanced labs, you can configure the Mac mini as a <strong>Tailscale Subnet Router</strong>. This allows participants to reach other physical hardware (like real Cisco Nexus switches) in your lab through the Tailscale tunnel.</p>
+</blockquote>
+
+</body>
+</html>

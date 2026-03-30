@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>agentic_vision.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="vision-document-evolution-to-agentic-architecture">Vision Document: Evolution to Agentic Architecture</h1>
+<h2 id="phase-2-from-predictive-insights-to-autonomous-remediation">Phase 2: From Predictive Insights to Autonomous Remediation</h2>
+<h3 id="1-executive-vision">1. Executive Vision</h3>
+<p>The current state of the <strong>Digital Twin: Predictive Insights</strong> lab provides superior visibility and forecasting using local AI. The next evolution—<strong>Agentic Architecture</strong>—moves beyond reporting by granting the AI authorized &quot;agency&quot; to interact with the infrastructure, effectively creating a self-healing network ecosystem.</p>
+<h3 id="2-conceptual-architecture">2. Conceptual Architecture</h3>
+<pre><code class="language-mermaid"><div class="mermaid">graph TD
+    subgraph "Perception (Observability)"
+        SPL["Splunk Enterprise"] -- "Real-time Telemetry" --> MCP["Splunk MCP Server"]
+        MCP -- "Standardized Context" --> AG["Network Operations Agent"]
+        GAO["GenAI Observability"] -- "Performance Feedback" --> AG
+    end
+
+    subgraph "Cognition (The Brain)"
+        AG -- "1. Analyze & Plan" --> LLM["LLM (Claude / Ollama)"]
+        LLM -- "2. Multi-step Execution Plan" --> AG
+        AG -- "3. Tool Selection" --> AG
+    end
+
+    subgraph "Action Space (Tools)"
+        AG -- "Remediate" --> NX["Nexus 9000 API"]
+        AG -- "Adjust Path" --> TE["ThousandEyes API"]
+        AG -- "Update Policy" --> ISO["Isovalent API"]
+    end
+
+    subgraph "Safety & Governance"
+        AG <--> AIC["AI Canvas (Human-in-the-Loop)"]
+        AG <--> AID["AI Defense (Security Proxy)"]
+    end
+
+    classDef agent fill:#f96,stroke:#333,stroke-width:2px;
+    class AG agent;
+    class MCP fill:#6ef,stroke:#333,stroke-width:2px;
+</div></code></pre>
+<h3 id="3-core-agentic-capabilities">3. Core Agentic Capabilities</h3>
+<h4 id="a-standardized-perception-via-mcp"><strong>A. Standardized Perception via MCP</strong></h4>
+<p>The <strong>Splunk MCP Server</strong> acts as a universal translator. Instead of the agent needing to know complex Splunk REST API calls or SPL syntax, it simply asks the MCP server for &quot;Device Health&quot; or &quot;Recent Anomalies.&quot; This decoupling allows the agent to focus on <em>reasoning</em> rather than <em>data retrieval mechanics</em>.
+Instead of a linear script execution, the system maintains a continuous loop. It &quot;perceived&quot; an anomaly in Splunk, &quot;thinks&quot; about a remediation strategy via Ollama, and &quot;acts&quot; via Infrastructure-as-Code (IaC) or direct API calls.</p>
+<h4 id="b-intelligent-tool-use-function-calling"><strong>B. Intelligent Tool-Use (Function Calling)</strong></h4>
+<p>The Predictive Engine evolves into a <strong>Tool-Enabled Agent</strong>.</p>
+<ul>
+<li><strong>Predictive Phase</strong>: &quot;Interface errors are rising; alert the admin.&quot;</li>
+<li><strong>Agentic Phase</strong>: &quot;Interface errors are rising. I am calling <code>isolate_faulty_interface()</code> and re-routing traffic to ensure 0% packet loss for mission-critical applications.&quot;</li>
+</ul>
+<h4 id="c-goal-oriented-planning"><strong>C. Goal-Oriented Planning</strong></h4>
+<p>Agents can handle complex, multi-step tasks.</p>
+<ul>
+<li><strong>Task</strong>: &quot;Optimize the network for an upcoming high-bandwidth event.&quot;</li>
+<li><strong>Agent Plan</strong>:
+<ol>
+<li>Verify current capacity via ThousandEyes.</li>
+<li>Burst S3 data lake ingestion to AWS.</li>
+<li>Pre-emptively scale buffer limits on primary Nexus trunks.</li>
+<li>Update eBPF filters via Isovalent to prioritize performance.</li>
+</ol>
+</li>
+</ul>
+<h3 id="4-choosing-the-right-brain-claudemcp-vs-splunk-ai-assistant">4. Choosing the Right Brain: Claude/MCP vs. Splunk AI Assistant</h3>
+<p>While Splunk offers a native AI Assistant, the <strong>Claude/MCP Architecture</strong> implemented in this lab provides unique advantages for end-to-end agentic workflows.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Feature</th>
+<th style="text-align:left">Claude + Splunk MCP (This Lab)</th>
+<th style="text-align:left">Splunk AI Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Primary Strength</strong></td>
+<td style="text-align:left"><strong>Cross-Domain Agency</strong>: Reasons across Splunk, Cisco APIs, and other tools in one loop.</td>
+<td style="text-align:left"><strong>Deep SPL Expertise</strong>: Specialized in generating and explaining complex SPL queries.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>&quot;Managed Service&quot; Fit</strong></td>
+<td style="text-align:left"><strong>Extremely High</strong>: Unified interface for &quot;Network + App + Security&quot; management.</td>
+<td style="text-align:left"><strong>Medium</strong>: Excellent for data analytics, but restricted to the Splunk ecosystem.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Scope of Action</strong></td>
+<td style="text-align:left"><strong>Broad</strong>: Can execute remediations in infrastructure (e.g., re-route traffic via Nexus API).</td>
+<td style="text-align:left"><strong>Narrow</strong>: Focused on analysis and native Splunk dashboarding/config.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Model Flexibility</strong></td>
+<td style="text-align:left"><strong>High</strong>: Can use Claude or local LLMs (Ollama) for data sovereignty.</td>
+<td style="text-align:left"><strong>Low</strong>: Generally tied to Splunk-hosted cloud models.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-safety--the-%22ai-canvas%22">5. Safety &amp; The &quot;AI Canvas&quot;</h3>
+<p>In an agentic world, trust is paramount.</p>
+<ul>
+<li><strong>Human-in-the-Loop</strong>: The <strong>AI Canvas</strong> becomes a collaborative workspace where the agent proposes multi-step &quot;blueprints&quot; for remediation that a human operator can verify and trigger.</li>
+<li><strong>AI Defense Proxy</strong>: A dedicated security layer that inspects outgoing agent commands to prevent &quot;hallucinated&quot; configurations or unauthorized data access.</li>
+</ul>
+<h3 id="6-the-managed-service-vision-natural-language-to-spl">6. The Managed Service Vision: Natural Language to SPL</h3>
+<p>The integration of Claude and MCP creates a powerful <strong>Managed Service</strong> opportunity.</p>
+<p>Traditionally, managing Splunk requires deep expertise in <strong>SPL (Splunk Search Language)</strong>. With an agentic architecture:</p>
+<ul>
+<li><strong>Natural Language Interface</strong>: Partners and customers can simply &quot;talk&quot; to Claude (e.g., <em>&quot;Show me the top 5 devices by CPU usage&quot;</em>).</li>
+<li><strong>Auto-Translation</strong>: Claude translates these goals into accurate SPL queries, executes them via the MCP server, and interprets the results.</li>
+<li><strong>Skill Democratization</strong>: Tier 1 support engineers or business analysts can now leverage the full power of the Splunk Data Lake without needing a 6-month SPL training course.</li>
+</ul>
+<h3 id="7-realized-outcomes-the-showcase">7. Realized Outcomes (The Showcase)</h3>
+<ul>
+<li><strong>Zero-Touch Operations</strong>: Common failure patterns are handled autonomously.</li>
+<li><strong>Reduced MTTR</strong>: Troubleshooting happens in seconds via natural language.</li>
+<li><strong>Governance at Scale (IMPLEMENTED)</strong>: Traced via the <strong>GenAI Observability Dashboard</strong>. <a href="../hello_agent/docs/walkthrough.md#a-observability-agent-trace">See Tracing Showcase</a></li>
+<li><strong>AI Defense &amp; Security (IMPLEMENTED)</strong>: Runtime protection via a security proxy. <a href="./walkthrough.md#showcase-cisco-ai-defense">See Security Showcase</a></li>
+<li><strong>Persistent Learning (IMPLEMENTED)</strong>: Agents utilize long-term memory. <a href="../hello_agent/docs/walkthrough.md#c-persistence-agent-memory">See Persistence Showcase</a></li>
+</ul>
+<hr>
+<p><strong>This document outlines the strategic roadmap for transforming the Digital Twin lab into an industry-leading autonomous agentic platform.</strong></p>
+
+</body>
+</html>

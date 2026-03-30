@@ -1,0 +1,59 @@
+# OS Metadata
+.DS_Store
+Thumbs.db
+
+# Environment and Secrets
+.env
+*.env
+! .env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Docker and Data
+splunk/etc/
+! splunk/etc/apps/splunk_genai_observability/
+splunk/var/
+open_webui_data/
+open_webui_data_new/
+postgres_data/
+ollama_data/
+
+# Logs
+logs/
+*.log
+nohup.out
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project Specific
+hello_agent/venv/
+hello_agent/logs/
+hello_agent/docs/walkthrough.md
+test_output.log
+agent_test.log

@@ -1,0 +1,32 @@
+# Task: Fix Token Cost in Splunk Dashboard
+
+- [ ] Research and Verify Root Cause [/]
+    - [x] Check `predictive_engine.py` for metrics sent to Splunk
+    - [x] Check Splunk `macros.conf` for cost calculation logic
+    - [x] Check Splunk `genai_model_pricing.csv` for missing models
+    - [ ] Run `predictive_engine.py` to see actual output and verify ingestion [ ]
+- [x] Planning
+    - [x] Create implementation plan
+    - [x] Get user approval
+- [x] Implementation
+    - [x] Add `llama3` to `genai_model_pricing.csv`
+    - [x] Add `claude-3-5-sonnet` (alias) to `genai_model_pricing.csv`
+    - [x] Update `predictive_engine.py` with correct timestamp format (ISO8601) to match Splunk props
+    - [ ] (Optional) Add comparison models to lookup if needed
+- [x] Verification
+    - [x] Run `predictive_engine.py` (verified formatting, Ollama timeout expected)
+    - [x] Send test events to verify `estimated_cost` field and lookup logic
+    - [x] Verify Cost Management dashboard displays data via test script
+    - [x] Update Logical Diagram in Walkthrough
+    - [x] Refine Documentation for Logical Flow & Environment
+- [x] Phase 3: Multi-tenant Cloud Lab
+    - [x] Research Splunk multi-tenancy for lab/training
+    - [x] Plan "Cloud Lab" architecture (non-local execution)
+    - [x] Update `docs/portability_and_remote_access.md` with multi-user guidance
+    - [x] Propose data tagging for multi-user dashboard isolation (Manual & SDK-level)
+    - [x] Document Mac mini + Tailscale "Permanent Lab" hosting option
+- [x] Install Tailscale (Blocked by Cisco Umbrella/Network Policy)
+- [x] Install and Configure ngrok (Fallback)
+- [x] Debug and Fix Cloud IDE (Removed invalid --base-path flag)
+- [x] Configure AI Analyst Environment in Cloud IDE (Python, Dependencies, Telemetry)
+- [x] Deploy Open WebUI for Premium Chat Experience

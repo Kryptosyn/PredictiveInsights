@@ -9,7 +9,7 @@ import json
 # Global config storage
 _config = {
     "url": "https://localhost:8088",
-    "token": "bb3b876d-a885-4820-8675-3fb520ac221d",
+    "token": os.environ.get("SPLUNK_HEC_TOKEN", "bb3b876d-a885-4820-8675-3fb520ac221d"),
     "index": "genai_traces",
     "user": os.getenv("LAB_USER_ID", "shared"),
     "workflow": "default"

@@ -5,7 +5,7 @@ import uuid
 import os
 
 SPLUNK_HEC_URL = "https://localhost:8088/services/collector"
-SPLUNK_HEC_TOKEN = "bb3b876d-a885-4820-8675-3fb520ac221d"
+SPLUNK_HEC_TOKEN = os.environ.get("SPLUNK_HEC_TOKEN")
 
 def send_test_event(model_name, provider="anthropic"):
     trace_id = str(uuid.uuid4()).replace('-', '')

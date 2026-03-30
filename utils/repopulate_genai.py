@@ -8,7 +8,7 @@ import datetime
 
 # Configuration
 SPLUNK_URL = os.getenv('SPLUNK_HEC_URL', 'https://localhost:8088/services/collector')
-SPLUNK_TOKEN = os.getenv('SPLUNK_TOKEN', 'bb3b876d-a885-4820-8675-3fb520ac221d')
+SPLUNK_TOKEN = os.getenv('SPLUNK_HEC_TOKEN')
 LAB_USER_ID = os.getenv('LAB_USER_ID', 'shared')
 
 models = ["gemma3:1b", "qwen2.5:7b", "qwen3:4b"]

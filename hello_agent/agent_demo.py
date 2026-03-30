@@ -14,7 +14,7 @@ from genai_telemetry import setup_splunk_telemetry, trace_agent, trace_tool
 setup_splunk_telemetry(
     workflow_name="hello-agent-maintenance",
     splunk_hec_url=os.getenv("SPLUNK_HEC_URL", "https://localhost:8088"),
-    splunk_hec_token=os.getenv("SPLUNK_HEC_TOKEN", "bb3b876d-a885-4820-8675-3fb520ac221d"),
+    splunk_hec_token=os.getenv("SPLUNK_HEC_TOKEN"),
     splunk_index=os.getenv("SPLUNK_INDEX", "genai_traces"),
     verify_ssl=False
 )

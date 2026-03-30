@@ -6,7 +6,7 @@ import datetime
 
 OLLAMA_URL = os.getenv('OLLAMA_URL', 'http://127.0.0.1:11434/api/generate')
 SPLUNK_URL = os.getenv('SPLUNK_URL', 'http://127.0.0.1:8089/services/search/jobs')
-SPLUNK_TOKEN = os.getenv('SPLUNK_TOKEN', 'bb3b876d-a885-4820-8675-3fb520ac221d')
+SPLUNK_TOKEN = os.getenv('SPLUNK_HEC_TOKEN')
 
 def get_recent_telemetry():
     """Fetches recent telemetry from Splunk."""

@@ -19,7 +19,7 @@ mcp = FastMCP("Splunk", host="0.0.0.0")
 SPLUNK_URL = os.getenv('SPLUNK_URL', 'https://localhost:8089')
 SPLUNK_USER = os.getenv('SPLUNK_USER', 'admin')
 SPLUNK_PASSWORD = os.getenv('SPLUNK_PASSWORD', 'ChangedPassword123')
-SPLUNK_HEC_TOKEN = os.getenv('SPLUNK_HEC_TOKEN', 'bb3b876d-a885-4820-8675-3fb520ac221d')
+SPLUNK_HEC_TOKEN = os.getenv('SPLUNK_HEC_TOKEN')
 
 # LLM Metadata for Telemetry
 LLM_PROVIDER = os.getenv('LLM_PROVIDER', 'anthropic')

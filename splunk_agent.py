@@ -8,7 +8,7 @@ from genai_telemetry import setup_splunk_telemetry, trace_agent, trace_tool
 
 # 0. Setup Telemetry
 SPLUNK_HEC_URL = os.getenv("SPLUNK_HEC_URL", "http://127.0.0.1:8088")
-SPLUNK_HEC_TOKEN = os.getenv("SPLUNK_HEC_TOKEN", "bb3b876d-a885-4820-8675-3fb520ac221d")
+SPLUNK_HEC_TOKEN = os.getenv("SPLUNK_HEC_TOKEN")
 LAB_USER_ID = os.getenv("LAB_USER_ID", "default_analyst")
 
 setup_splunk_telemetry(

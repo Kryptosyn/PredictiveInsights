@@ -22,10 +22,7 @@ class Filter:
             default="https://splunk:8088/services/collector",
             description="Splunk HEC URL"
         )
-        splunk_token: str = Field(
-            default="bb3b876d-a885-4820-8675-3fb520ac221d",
-            description="Splunk HEC Token"
-        )
+            default=os.environ.get("SPLUNK_HEC_TOKEN", "bb3b876d-a885-4820-8675-3fb520ac221d"),
         cost_gemma3_1b: float = Field(default=0.15, description="Cost per 1M tokens for gemma3:1b")
         cost_phi3_mini: float = Field(default=0.05, description="Cost per 1M tokens for phi3:mini")
         cost_qwen2_5_7b: float = Field(default=0.30, description="Cost per 1M tokens for qwen2.5:7b")

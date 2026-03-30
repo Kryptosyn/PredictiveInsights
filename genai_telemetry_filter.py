@@ -21,6 +21,7 @@ class Filter:
         splunk_url: str = Field(
             default="https://splunk:8088/services/collector",
             description="Splunk HEC URL"
+        )
         splunk_token: str = Field(
             default=os.environ.get("SPLUNK_HEC_TOKEN", "bb3b876d-a885-4820-8675-3fb520ac221d"),
             description="Splunk HEC Token"

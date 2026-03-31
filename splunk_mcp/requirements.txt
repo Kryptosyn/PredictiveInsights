@@ -1,3 +1,4 @@
+starlette==0.41.3
 fastmcp
 requests
 urllib3

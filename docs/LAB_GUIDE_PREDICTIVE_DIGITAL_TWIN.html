@@ -415,7 +415,28 @@ code {
 </tbody>
 </table>
 <hr>
-<h2 id="2-lab-access--credentials">2. Lab Access &amp; Credentials</h2>
+<h2 id="2-joining-the-lab-zero-footprint">2. Joining the Lab (Zero Footprint)</h2>
+<p>Follow these <strong>3 steps</strong> to connect your identity and start your digital twin:</p>
+<ol>
+<li><strong>Open the Web IDE</strong>: <a href="https://roosevelt-nonentreating-paler.ngrok-free.dev/ide/">https://roosevelt-nonentreating-paler.ngrok-free.dev/ide/</a>
+<ul>
+<li><strong>Password</strong>: <code>LabPassword123</code></li>
+</ul>
+</li>
+<li><strong>Start Onboarding</strong>: Open a <strong>Terminal</strong> from the top-left menu and run:<pre class="hljs"><code><div>./join_lab.sh
+</div></code></pre>
+<ul>
+<li><em>Note: This script will prompt for your User ID (e.g., user01) and start the telemetry flow.</em></li>
+</ul>
+</li>
+<li><strong>Access Premium Chat</strong>: Open the chat interface at <a href="https://roosevelt-nonentreating-paler.ngrok-free.dev/">https://roosevelt-nonentreating-paler.ngrok-free.dev/</a>.
+<ul>
+<li><strong>Login</strong>: <code>userXX@cisco.com</code> / <code>CiscoLab2026!</code></li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="3-lab-access--credentials">3. Lab Access &amp; Credentials</h2>
 <p>To participate in the lab, you will use a single gateway URL to access all services.</p>
 <h3 id="service-urls"><strong>Service URLs</strong></h3>
 <ul>
@@ -452,7 +473,7 @@ code {
 <strong>Data Isolation</strong>: Always ensure you use your assigned <code>userXX</code> login. This ensures your telemetry data and AI &quot;thoughts&quot; are isolated from other participants.</p>
 </blockquote>
 <hr>
-<h2 id="3-logical-architecture-end-to-end-insights">3. Logical Architecture: End-to-End Insights</h2>
+<h2 id="4-logical-architecture-end-to-end-insights">4. Logical Architecture: End-to-End Insights</h2>
 <pre><code class="language-mermaid"><div class="mermaid">graph TD
     subgraph "A. Infrastructure Stack (Telemetry Sources)"
         NX[Cisco Nexus 9000] -- "CPU/Int Metrics" --> SF[Splunk Forwarder]
@@ -482,7 +503,7 @@ code {
     class SP fill:#6ef,stroke:#333,stroke-width:2px;
 </div></code></pre>
 <hr>
-<h2 id="2-the-telemetry-foundation-full-stack-visibility">2. The Telemetry Foundation: Full-Stack Visibility</h2>
+<h2 id="5-the-telemetry-foundation-full-stack-visibility">5. The Telemetry Foundation: Full-Stack Visibility</h2>
 <p>Before the AI can predict failures, the Digital Twin must be synchronized with reality. In this section, you will verify the ingestion of three critical data streams into your <strong>Splunk Enterprise</strong> data lake.</p>
 <h3 id="verifying-the-data-streams">Verifying the Data Streams</h3>
 <ol>
@@ -496,7 +517,7 @@ code {
 All telemetry is indexed automatically. The AI uses these historical patterns to build a baseline for &quot;normal&quot; behavior before identifying anomalies.</p>
 </blockquote>
 <hr>
-<h2 id="3-generating-predictive-insights">3. Generating Predictive Insights</h2>
+<h2 id="6-generating-predictive-insights">6. Generating Predictive Insights</h2>
 <p>In this module, you will activate the <strong>Predictive Engine</strong>. This AI-driven script acts as an &quot;Investigative Assistant,&quot; scanning telemetry for patterns that precede actual outages—such as interface degradation combined with rising application latency.</p>
 <h3 id="running-the-predictive-analysis">Running the Predictive Analysis</h3>
 <p>From your terminal, execute the following:</p>
@@ -521,7 +542,7 @@ RECOMMENDATION: Pre-emptively proactive failover to path B and inspect physical 
 <strong>No-SPL Required</strong>: Notice that the engine generated this report without you ever writing a Splunk search query. The AI identified the &quot;pre-failure&quot; pattern by reasoning over the raw metrics directly.</p>
 </blockquote>
 <hr>
-<h2 id="4-natural-language-investigation-the-mcp-moment">4. Natural Language Investigation: The MCP Moment</h2>
+<h2 id="7-natural-language-investigation-the-mcp-moment">7. Natural Language Investigation: The MCP Moment</h2>
 <p>The <strong>Model Context Protocol (MCP)</strong> acts as a &quot;Universal Translator.&quot; It allows you to talk to your infrastructure in plain English, while the AI handles the complex translation to Splunk Search Processing Language (SPL) in the background.</p>
 <h3 id="the-investigative-assistant">The Investigative Assistant</h3>
 <p>You will use the <strong>Splunk AI Analyst</strong> to probe deeper into the environment health. Because of the MCP gateway, the AI can &quot;reach&quot; into Splunk, fetch the data, and summarize it for you.</p>
@@ -549,7 +570,7 @@ RECOMMENDATION: Pre-emptively proactive failover to path B and inspect physical 
 <strong>Read-Only Trust</strong>: The AI acts purely as an investigative assistant. It can see everything, but it cannot change your configurations. This preserves &quot;Operational Sovereignty&quot; while accelerating your Mean Time to Identification (MTTI).</p>
 </blockquote>
 <hr>
-<h2 id="5-the-safety-shield-cisco-ai-defense">5. The Safety Shield: Cisco AI Defense</h2>
+<h2 id="8-the-safety-shield-cisco-ai-defense">8. The Safety Shield: Cisco AI Defense</h2>
 <p>Every &quot;thought&quot; and action taken by the AI is audited. To maintain absolute operational trust, <strong>Cisco AI Defense</strong> inspects all prompt inputs and outputs for security violations.</p>
 <h3 id="auditing-the-ai">Auditing the AI</h3>
 <ol>
@@ -558,7 +579,7 @@ RECOMMENDATION: Pre-emptively proactive failover to path B and inspect physical 
 <li><strong>Verify Observability</strong>: Observe the <code>genai_traces</code> index to see the exact logic the AI used, including the SPL queries it generated on your behalf.</li>
 </ol>
 <hr>
-<h2 id="6-genai-observability-tracking-agent-performance">6. GenAI Observability: Tracking Agent Performance</h2>
+<h2 id="9-genai-observability-tracking-agent-performance">9. GenAI Observability: Tracking Agent Performance</h2>
 <p>As AI agents become a core part of your operational strategy, monitoring their performance, cost, and token usage is critical. The <strong>GenAI Observability</strong> dashboard in Splunk provides a comprehensive view of your AI fleet's health and economics.</p>
 <h3 id="monitoring-cost-and-tokens">Monitoring Cost and Tokens</h3>
 <ol>
@@ -572,7 +593,7 @@ RECOMMENDATION: Pre-emptively proactive failover to path B and inspect physical 
 Keep a close eye on the &quot;Cost per Query&quot; metrics. High token usage on simple queries might indicate a need to refine your prompts or switch to a more efficient model configuration.</p>
 </blockquote>
 <hr>
-<h2 id="7-conclusion-the-business-value-of-proactive-ops">7. Conclusion: The Business Value of Proactive Ops</h2>
+<h2 id="10-conclusion-the-business-value-of-proactive-ops">10. Conclusion: The Business Value of Proactive Ops</h2>
 <p>By the end of this lab, you have moved from a reactive state to a proactive digital twin.</p>
 <ul>
 <li><strong>Downtime Prevented</strong>: By acting on predictive insights before they become outages, teams can reduce MTTR by up to 80%.</li>
@@ -580,7 +601,7 @@ Keep a close eye on the &quot;Cost per Query&quot; metrics. High token usage on 
 <li><strong>Infrastructure Value</strong>: You are proving that the value of Cisco hardware extends beyond connectivity—it is a rich source of intelligence that powers the future of autonomous operations.</li>
 </ul>
 <hr>
-<h2 id="8-choosing-your-interface-lab-access-points">8. Choosing Your Interface: Lab Access Points</h2>
+<h2 id="11-choosing-your-interface-lab-access-points">11. Choosing Your Interface: Lab Access Points</h2>
 <p>As detailed in <strong>Section 2 (Lab Access &amp; Credentials)</strong>, you have three primary ways to interact with the Digital Twin environment.</p>
 <h3 id="1-open-webui-premium-chat"><strong>1. Open WebUI (Premium Chat)</strong></h3>
 <p>The primary interface for NLP-to-Splunk investigations.</p>

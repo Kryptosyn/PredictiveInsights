@@ -4,10 +4,22 @@ import random
 import requests
 import os
 
+def load_dotenv():
+    if os.path.exists('.env'):
+        with open('.env') as f:
+            for line in f:
+                if line.strip() and not line.startswith('#') and '=' in line:
+                    key, value = line.strip().split('=', 1)
+                    if key not in os.environ:
+                        os.environ[key] = value
+
+load_dotenv()
+
 # Configuration from environment variables
-SPLUNK_HOST = os.getenv('SPLUNK_HOST', 'localhost')
+SPLUNK_HOST = os.getenv('SPLUNK_HOST', 'splunk')
 SPLUNK_PORT = os.getenv('SPLUNK_PORT', '8088')  # HEC port
-SPLUNK_TOKEN = os.getenv('SPLUNK_TOKEN', '')
+# Support both SPLUNK_TOKEN and SPLUNK_HEC_TOKEN (consistent with .env)
+SPLUNK_TOKEN = os.getenv('SPLUNK_TOKEN') or os.getenv('SPLUNK_HEC_TOKEN', '')
 
 # Multi-user isolation: Default to the current Linux user if LAB_USER_ID is not set
 import getpass
@@ -51,8 +63,9 @@ def generate_isovalent_flows():
 def send_to_splunk(data, sourcetype):
     """Sends data to Splunk via HEC (HTTP Event Collector)."""
     # Note: In a real lab, you would use a valid token and SSL
-    # For this simulation, we'll print if the token is missing
+    # For this simulation, we'll print if the token is missing and return early
     if not SPLUNK_TOKEN:
+        print(f"FAILED: SPLUNK_HEC_TOKEN not found in environment. Please check your .env file.")
         print(f"DEBUG [{sourcetype}]: {json.dumps(data)}")
         return
 
@@ -63,6 +76,8 @@ def send_to_splunk(data, sourcetype):
     
     payload = {
         "event": data,
+        "host": LAB_USER_ID,
+        "index": "history",
         "sourcetype": sourcetype
     }
     

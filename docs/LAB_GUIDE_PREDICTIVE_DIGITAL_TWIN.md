@@ -31,7 +31,23 @@ A successful AI digital twin relies heavily on the quality, structure, and acces
 
 ---
 
-## 2. Lab Access & Credentials
+## 2. Joining the Lab (Zero Footprint)
+
+Follow these **3 steps** to connect your identity and start your digital twin:
+
+1.  **Open the Web IDE**: [https://roosevelt-nonentreating-paler.ngrok-free.dev/ide/](https://roosevelt-nonentreating-paler.ngrok-free.dev/ide/)
+    - **Password**: `LabPassword123`
+2.  **Start Onboarding**: Open a **Terminal** from the top-left menu and run:
+    ```bash
+    ./join_lab.sh
+    ```
+    - *Note: This script will prompt for your User ID (e.g., user01) and start the telemetry flow.*
+3.  **Access Premium Chat**: Open the chat interface at [https://roosevelt-nonentreating-paler.ngrok-free.dev/](https://roosevelt-nonentreating-paler.ngrok-free.dev/).
+    - **Login**: `userXX@cisco.com` / `CiscoLab2026!`
+
+---
+
+## 3. Lab Access & Credentials
 
 To participate in the lab, you will use a single gateway URL to access all services.
 
@@ -54,7 +70,7 @@ Participants should use their assigned **User ID** (e.g., `user01`) for all serv
 
 ---
 
-## 3. Logical Architecture: End-to-End Insights
+## 4. Logical Architecture: End-to-End Insights
 
 ```mermaid
 graph TD
@@ -88,7 +104,7 @@ graph TD
 
 ---
 
-## 2. The Telemetry Foundation: Full-Stack Visibility
+## 5. The Telemetry Foundation: Full-Stack Visibility
 
 Before the AI can predict failures, the Digital Twin must be synchronized with reality. In this section, you will verify the ingestion of three critical data streams into your **Splunk Enterprise** data lake.
 
@@ -103,7 +119,7 @@ Before the AI can predict failures, the Digital Twin must be synchronized with r
 
 ---
 
-## 3. Generating Predictive Insights
+## 6. Generating Predictive Insights
 
 In this module, you will activate the **Predictive Engine**. This AI-driven script acts as an "Investigative Assistant," scanning telemetry for patterns that precede actual outages—such as interface degradation combined with rising application latency.
 
@@ -134,7 +150,7 @@ RECOMMENDATION: Pre-emptively proactive failover to path B and inspect physical 
 
 ---
 
-## 4. Natural Language Investigation: The MCP Moment
+## 7. Natural Language Investigation: The MCP Moment
 
 The **Model Context Protocol (MCP)** acts as a "Universal Translator." It allows you to talk to your infrastructure in plain English, while the AI handles the complex translation to Splunk Search Processing Language (SPL) in the background.
 
@@ -163,7 +179,7 @@ You will use the **Splunk AI Analyst** to probe deeper into the environment heal
 
 ---
 
-## 5. The Safety Shield: Cisco AI Defense
+## 8. The Safety Shield: Cisco AI Defense
 
 Every "thought" and action taken by the AI is audited. To maintain absolute operational trust, **Cisco AI Defense** inspects all prompt inputs and outputs for security violations.
 
@@ -174,7 +190,7 @@ Every "thought" and action taken by the AI is audited. To maintain absolute oper
 
 ---
 
-## 6. GenAI Observability: Tracking Agent Performance
+## 9. GenAI Observability: Tracking Agent Performance
 
 As AI agents become a core part of your operational strategy, monitoring their performance, cost, and token usage is critical. The **GenAI Observability** dashboard in Splunk provides a comprehensive view of your AI fleet's health and economics.
 
@@ -189,7 +205,7 @@ As AI agents become a core part of your operational strategy, monitoring their p
 
 ---
 
-## 7. Conclusion: The Business Value of Proactive Ops
+## 10. Conclusion: The Business Value of Proactive Ops
 
 By the end of this lab, you have moved from a reactive state to a proactive digital twin.
 
@@ -199,7 +215,7 @@ By the end of this lab, you have moved from a reactive state to a proactive digi
 
 ---
 
-## 8. Choosing Your Interface: Lab Access Points
+## 11. Choosing Your Interface: Lab Access Points
 
 As detailed in **Section 2 (Lab Access & Credentials)**, you have three primary ways to interact with the Digital Twin environment.
 

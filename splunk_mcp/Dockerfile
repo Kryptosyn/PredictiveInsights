@@ -20,4 +20,4 @@ ENV LLM_MODEL=gemma3:1b
 # Expose SSE port (FastMCP default)
 EXPOSE 8000
 
-CMD ["python", "mcp_server.py"]
+CMD ["python", "mcp_server.py", "--sse"]

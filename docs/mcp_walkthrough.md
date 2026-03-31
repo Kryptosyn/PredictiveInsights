@@ -91,5 +91,27 @@ The Splunk MCP server includes built-in telemetry for the **GenAI Observability 
 
 This allows organizations to maintain governance and monitor the financial impact of agentic workflows in real-time.
 
-## 7. Summary
-By integrating MCP, you have moved from a **Fixed Pipeline** (where the script defines the logic) to an **Agentic Workflow** (where the AI discovers the tools it needs to solve a human goal).
+## 8. Connecting to Open WebUI (Docker)
+
+For large-scale lab environments, the Splunk MCP server is deployed within the **Unified Docker Stack**, allowing participants to access it via the **Open WebUI** chat interface.
+
+### A. Containerized Architecture
+The MCP server runs in the `splunk-mcp` container and is exposed internally at `http://splunk-mcp:8000/sse`. It is proxied through the Nginx Gateway for external access.
+
+### B. Registering the Tool Server
+To enable the Splunk tool in Open WebUI:
+1.  **Access the Admin Panel**: Navigate to `http://localhost/` and login as an administrator.
+2.  **Navigate to Integrations**: Go to **Settings** -> **Integrations**.
+3.  **Add Connection**:
+    - **Name**: `Splunk`
+    - **URL**: `http://splunk-mcp:8000/sse`
+    - **Type**: `MCP (Streamable HTTP)`
+4.  **Verify**: Click the **Refresh** icon. A successful connection will return a green "Verified" status.
+
+### C. Protocol Hardening (Technical Detail)
+Open WebUI’s MCP implementation requires strict adherence to the SSE transport and JSON-RPC protocols. The Splunk MCP server includes specific hardening for this:
+- **POST /sse Handler**: A dedicated handler satisfies Open WebUI's connection verification by returning a valid JSON-RPC 2.0 response.
+- **TrustedHostMiddleware**: Allows connections from the internal Docker network and the Nginx proxy, preventing "421 Misdirected Request" errors.
+
+## 9. Summary
+By integrating MCP, you have moved from a **Fixed Pipeline** (where the script defines the logic) to an **Agentic Workflow** (where the AI discovers the tools it needs to solve a human goal). Whether using **Claude Desktop** or **Open WebUI**, the Splunk MCP server provides a unified interface for observability and automated operations.

@@ -5,7 +5,7 @@ This project implements an automated GenAI Observability pipeline with secure re
 ## 🚀 Quick Start
 
 ### 1. Prerequisites
-- **Docker Desktop**: Ensure Docker is running.
+- **Ollama for Mac**: Download and install from [ollama.com](https://ollama.com/). Ensure it is running in your menu bar.
 - **Ngrok Authtoken**: (Optional for remote access) The pipeline automatically attempts to discover your token from `~/.config/ngrok/ngrok.yml`.
 
 ### 2. Environment Setup
@@ -22,6 +22,8 @@ Ensure the following variables are set in `.env`:
 ### 3. Start the Pipeline
 ```bash
 docker-compose up -d
+# Ensure models are loaded in your native Ollama
+ollama pull gemma3:1b
 ```
 *Note: Splunk may take 3-4 minutes to reach a healthy state on the first startup.*
 

@@ -371,27 +371,50 @@ code {
 <p>The <strong>Model Context Protocol (MCP)</strong> is an open standard that enables AI models to securely access data and tools in external systems. Instead of hardcoding API integrations, the AI &quot;discovers&quot; the tools provided by the MCP server.</p>
 <h2 id="2-setup-the-splunk-mcp-server">2. Setup the Splunk MCP Server</h2>
 <h3 id="a-environment-configuration">A. Environment Configuration</h3>
-<p>The MCP server uses the same credentials as the Predictive Engine. Ensure these are set in your environment:</p>
+<p>The MCP server uses the Splunk Management API (Port 8089) for queries. Set these in your environment or within the Claude Desktop configuration:</p>
 <pre class="hljs"><code><div><span class="hljs-built_in">export</span> SPLUNK_URL=<span class="hljs-string">"https://localhost:8089"</span>
-<span class="hljs-built_in">export</span> SPLUNK_TOKEN=<span class="hljs-string">"bb3b876d-a885-4820-8675-3fb520ac221d"</span>
+<span class="hljs-built_in">export</span> SPLUNK_USER=<span class="hljs-string">"admin"</span>
+<span class="hljs-built_in">export</span> SPLUNK_PASSWORD=<span class="hljs-string">"ChangedPassword123"</span>
 </div></code></pre>
 <h3 id="b-install-dependencies">B. Install Dependencies</h3>
-<pre class="hljs"><code><div>pip install mcp fastmcp requests
+<p>It is highly recommended to use a dedicated virtual environment to avoid dependency conflicts:</p>
+<pre class="hljs"><code><div>python3 -m venv venv
+<span class="hljs-built_in">source</span> venv/bin/activate
+pip install fastmcp requests urllib3 mcp
 </div></code></pre>
 <h3 id="c-run-the-server">C. Run the Server</h3>
-<pre class="hljs"><code><div>python3 splunk_mcp/mcp_server.py
+<pre class="hljs"><code><div>python3 mcp_server.py
+</div></code></pre>
+<h3 id="d-local-vs-cloud-llm-telemetry">D. Local vs. Cloud LLM Telemetry</h3>
+<p>The MCP server can be configured to report telemetry for different LLM providers via environment variables. This is useful for comparing costs and performance between local models and cloud APIs:</p>
+<ul>
+<li><strong>Claude (Default)</strong>: Reports estimated costs based on Anthropic's pay-per-token pricing.</li>
+<li><strong>Ollama / Local</strong>: Reports <strong>$0.00 cost</strong> while still tracking token consumption and duration for performance analysis.</li>
+</ul>
+<p>To switch providers in your <code>claude_desktop_config.json</code>:</p>
+<pre class="hljs"><code><div><span class="hljs-string">"env"</span>: {
+  <span class="hljs-attr">"LLM_PROVIDER"</span>: <span class="hljs-string">"ollama"</span>,
+  <span class="hljs-attr">"LLM_MODEL"</span>: <span class="hljs-string">"llama3"</span>
+}
 </div></code></pre>
 <h2 id="3-connecting-to-claude">3. Connecting to Claude</h2>
 <p>To use this with Claude Desktop:</p>
 <ol>
 <li>Open your Claude Desktop configuration (<code>~/Library/Application Support/Claude/claude_desktop_config.json</code>).</li>
-<li>Add the Splunk MCP server:</li>
+<li>Add the Splunk MCP server with the absolute path to your virtual environment's Python and the server script:</li>
 </ol>
 <pre class="hljs"><code><div>{
   <span class="hljs-attr">"mcpServers"</span>: {
     <span class="hljs-attr">"splunk"</span>: {
-      <span class="hljs-attr">"command"</span>: <span class="hljs-string">"python3"</span>,
-      <span class="hljs-attr">"args"</span>: [<span class="hljs-string">"/absolute/path/to/splunk_mcp/mcp_server.py"</span>]
+      <span class="hljs-attr">"command"</span>: <span class="hljs-string">"/Users/micdemar/Library/CloudStorage/OneDrive-Cisco/Predictive Insights/splunk_mcp/venv/bin/python3"</span>,
+      <span class="hljs-attr">"args"</span>: [
+        <span class="hljs-string">"/Users/micdemar/Library/CloudStorage/OneDrive-Cisco/Predictive Insights/splunk_mcp/mcp_server.py"</span>
+      ],
+      <span class="hljs-attr">"env"</span>: {
+        <span class="hljs-attr">"SPLUNK_URL"</span>: <span class="hljs-string">"https://localhost:8089"</span>,
+        <span class="hljs-attr">"SPLUNK_USER"</span>: <span class="hljs-string">"admin"</span>,
+        <span class="hljs-attr">"SPLUNK_PASSWORD"</span>: <span class="hljs-string">"ChangedPassword123"</span>
+      }
     }
   }
 }
@@ -404,8 +427,48 @@ code {
 <li><em>&quot;Are there any interface errors on eth1/1?&quot;</em></li>
 </ul>
 <p>Claude will automatically choose the <code>search_splunk</code> tool provided by the MCP server, execute the query, and provide a reasoned answer.</p>
-<h2 id="5-summary">5. Summary</h2>
-<p>By integrating MCP, you have moved from a <strong>Fixed Pipeline</strong> (where the script defines the logic) to an <strong>Agentic Workflow</strong> (where the AI discovers the tools it needs to solve a human goal).</p>
+<h2 id="5-cognition-claude-vs-ollama">5. Cognition: Claude vs. Ollama</h2>
+<p>In the <strong>Predictive Insights</strong> phase, we used <strong>Ollama (Llama3)</strong> as the &quot;brain&quot; for the <code>predictive_engine.py</code> script.</p>
+<p>In this <strong>Agentic Workflow</strong> phase, <strong>Claude (via Claude Desktop)</strong> takes over that role:</p>
+<ul>
+<li><strong>Predictive Phase</strong>: The script <em>defines</em> the logic; Ollama <em>provides</em> the inference.</li>
+<li><strong>Agentic Phase</strong>: Claude <em>defines</em> the logic and <em>determines</em> which tools to use dynamically via the MCP server.</li>
+</ul>
+<p>Essentially, Claude Desktop becomes your new primary interface for both <strong>Observability</strong> (data retrieval via MCP) and <strong>Agency</strong> (decision making and execution).</p>
+<h2 id="6-genai-observability--cost-tracking">6. GenAI Observability &amp; Cost Tracking</h2>
+<p>The Splunk MCP server includes built-in telemetry for the <strong>GenAI Observability Dashboard</strong>:</p>
+<ul>
+<li><strong>Automatic Tracing</strong>: Every tool call sends telemetry to the <code>genai_traces</code> index.</li>
+<li><strong>Cost Estimation</strong>: The server estimates token usage and calculates spend based on <strong>Claude 3.5 Sonnet</strong> pricing.</li>
+<li><strong>Metrics Tracked</strong>: Input/Output tokens, Request Duration, Model Provider, and Total Cost.</li>
+</ul>
+<p>This allows organizations to maintain governance and monitor the financial impact of agentic workflows in real-time.</p>
+<h2 id="8-connecting-to-open-webui-docker">8. Connecting to Open WebUI (Docker)</h2>
+<p>For large-scale lab environments, the Splunk MCP server is deployed within the <strong>Unified Docker Stack</strong>, allowing participants to access it via the <strong>Open WebUI</strong> chat interface.</p>
+<h3 id="a-containerized-architecture">A. Containerized Architecture</h3>
+<p>The MCP server runs in the <code>splunk-mcp</code> container and is exposed internally at <code>http://splunk-mcp:8000/sse</code>. It is proxied through the Nginx Gateway for external access.</p>
+<h3 id="b-registering-the-tool-server">B. Registering the Tool Server</h3>
+<p>To enable the Splunk tool in Open WebUI:</p>
+<ol>
+<li><strong>Access the Admin Panel</strong>: Navigate to <code>http://localhost/</code> and login as an administrator.</li>
+<li><strong>Navigate to Integrations</strong>: Go to <strong>Settings</strong> -&gt; <strong>Integrations</strong>.</li>
+<li><strong>Add Connection</strong>:
+<ul>
+<li><strong>Name</strong>: <code>Splunk</code></li>
+<li><strong>URL</strong>: <code>http://splunk-mcp:8000/sse</code></li>
+<li><strong>Type</strong>: <code>MCP (Streamable HTTP)</code></li>
+</ul>
+</li>
+<li><strong>Verify</strong>: Click the <strong>Refresh</strong> icon. A successful connection will return a green &quot;Verified&quot; status.</li>
+</ol>
+<h3 id="c-protocol-hardening-technical-detail">C. Protocol Hardening (Technical Detail)</h3>
+<p>Open WebUI’s MCP implementation requires strict adherence to the SSE transport and JSON-RPC protocols. The Splunk MCP server includes specific hardening for this:</p>
+<ul>
+<li><strong>POST /sse Handler</strong>: A dedicated handler satisfies Open WebUI's connection verification by returning a valid JSON-RPC 2.0 response.</li>
+<li><strong>TrustedHostMiddleware</strong>: Allows connections from the internal Docker network and the Nginx proxy, preventing &quot;421 Misdirected Request&quot; errors.</li>
+</ul>
+<h2 id="9-summary">9. Summary</h2>
+<p>By integrating MCP, you have moved from a <strong>Fixed Pipeline</strong> (where the script defines the logic) to an <strong>Agentic Workflow</strong> (where the AI discovers the tools it needs to solve a human goal). Whether using <strong>Claude Desktop</strong> or <strong>Open WebUI</strong>, the Splunk MCP server provides a unified interface for observability and automated operations.</p>
 
 </body>
 </html>

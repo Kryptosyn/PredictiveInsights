@@ -35,20 +35,25 @@ This document contains the login credentials for the **Digital Twin: Predictive 
 | Participant | `user23` | `CiscoLab2026!` | |
 | Participant | `user24` | `CiscoLab2026!` | |
 
-## 2. Splunk Batch Creation Script
+## 2. Splunk Batch Creation (High-Speed REST API)
 
-Run the following command from your host terminal to create these users in the Splunk container automatically.
+Run this one-liner from your host terminal to provision all 24 participant accounts in seconds. This uses the REST API to avoid the "hanging" issues associated with the Splunk CLI.
 
 ```bash
-# Create the 'lab_participant' role with data isolation (user="$user$")
+# First, ensure the 'lab_participant' role exists with data isolation
 docker exec splunk /opt/splunk/bin/splunk add role lab_participant -srchFilter 'user="$user$"' -auth admin:ChangedPassword123
 
-# Batch create users 01-24
-for i in {01..24}; do
+# Then, batch create users 01-24
+docker exec splunk /bin/bash -c 'for i in {01..24}; do
   username="user$i"
-  echo "Creating Splunk user: $username"
-  docker exec splunk /opt/splunk/bin/splunk add user "$username" -password "CiscoLab2026!" -role lab_participant -auth admin:ChangedPassword123
-done
+  echo -n "Provisioning $username: "
+  curl -k -s -u "admin:ChangedPassword123" "https://localhost:8089/services/authentication/users" \
+    -d name="$username" \
+    -d password="CiscoLab2026!" \
+    -d roles="lab_participant" \
+    -o /dev/null -w "%{http_code}"
+  echo
+done'
 ```
 
 ## 4. Quick Start: Participant Onboarding (Zero Footprint)

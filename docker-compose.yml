@@ -22,13 +22,6 @@ services:
       - ./splunk/etc/apps/splunk_genai_observability:/opt/splunk/etc/apps/splunk_genai_observability
       - ./splunk/etc/apps/splunk_app_for_splunk_o11y_cloud:/opt/splunk/etc/apps/splunk_app_for_splunk_o11y_cloud
 
-  ollama:
-    image: ollama/ollama:latest
-    container_name: ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - /Users/micdemar/.ollama:/root/.ollama
 
   telemetry-producer:
     build:
@@ -51,7 +44,7 @@ services:
     environment:
       - PASSWORD=LabPassword123
       - SUDO_PASSWORD=LabPassword123
-      - USER_LIST=user01,user02,user03,user04,user05
+      - USER_LIST=user01,user02,user03,user04,user05,user06,user07,user08,user09,user10,user11,user12,user13,user14,user15,user16,user17,user18,user19,user20,user21,user22,user23,user24
     volumes:
       - .:/home/coder/project
     user: root
@@ -122,5 +115,4 @@ services:
 volumes:
   splunk_data:
   splunk_etc:
-  ollama_data:
   open_webui_data:

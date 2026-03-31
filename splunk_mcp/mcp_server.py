@@ -7,7 +7,7 @@ import datetime
 from mcp.server.fastmcp import FastMCP
 from starlette.responses import JSONResponse, RedirectResponse
 from starlette.routing import Route
-from starlette.middleware.hosts import TrustedHostMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 # Initialize FastMCP
 mcp = FastMCP("Splunk")
@@ -143,9 +143,36 @@ async def root_redirect(request):
 # Manually add routes to the Starlette app
 app.routes.append(Route("/openapi.json", endpoint=sse_openapi_json, methods=["GET"]))
 app.routes.append(Route("/sse/openapi.json", endpoint=sse_openapi_json, methods=["GET"]))
+
+# Add a valid JSON-RPC POST handler for /sse to satisfy Open WebUI's verification
+async def sse_post_handler(request):
+    try:
+        body = await request.json()
+        msg_id = body.get("id", 0)
+        # Return a valid JSON-RPC response format
+        return JSONResponse({
+            "jsonrpc": "2.0",
+            "id": msg_id,
+            "result": {"status": "connected", "mcp_version": "1.0.0"}
+        })
+    except:
+        return JSONResponse({
+            "jsonrpc": "2.0", 
+            "id": 0,
+            "result": {"status": "connected"}
+        })
+
+app.routes.append(Route("/sse", endpoint=sse_post_handler, methods=["POST"]))
+
 app.routes.append(Route("/", endpoint=root_redirect, methods=["GET"]))
 
 if __name__ == "__main__":
-    import uvicorn
-    # Use proxy headers to avoid 421 Misdirected Request errors in Docker/Nginx
-    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, forwarded_allow_ips="*")
+    import sys
+    # Check if we should run in SSE mode (for Docker/WebUI) or Stdio mode (for Desktop)
+    if "--sse" in sys.argv or os.getenv("MCP_TRANSPORT") == "sse":
+        import uvicorn
+        # Use proxy headers to avoid 421 Misdirected Request errors in Docker/Nginx
+        uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, forwarded_allow_ips="*")
+    else:
+        # Default to Stdio for Claude Desktop
+        mcp.run()

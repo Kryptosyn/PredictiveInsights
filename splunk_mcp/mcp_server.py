@@ -14,7 +14,7 @@ mcp = FastMCP("Splunk")
 
 SPLUNK_URL = os.getenv("SPLUNK_URL", "https://splunk:8089")
 SPLUNK_USER = os.getenv("SPLUNK_USER", "admin")
-SPLUNK_PASSWORD = os.getenv("SPLUNK_PASSWORD", "LabPassword123")
+SPLUNK_PASSWORD = os.getenv("SPLUNK_PASSWORD", "<SPLUNK_PASSWORD>")
 SPLUNK_HEC_URL = os.getenv("SPLUNK_HEC_URL", "https://splunk:8088/services/collector")
 SPLUNK_HEC_TOKEN = os.getenv("SPLUNK_HEC_TOKEN", "")
 
@@ -36,9 +36,17 @@ def send_telemetry(tool_name, duration_ms, query, results, status="success"):
             }
         }
         headers = {"Authorization": f"Splunk {SPLUNK_HEC_TOKEN}"}
-        requests.post(SPLUNK_HEC_URL, headers=headers, json=payload, verify=False, timeout=2)
-    except:
-        pass
+        # Harden telemetry for proxy environments: bypass proxies and ignore SSL for localhost
+        requests.post(
+            SPLUNK_HEC_URL, 
+            headers=headers, 
+            json=payload, 
+            verify=False, 
+            timeout=2,
+            proxies={"http": None, "https": None}
+        )
+    except Exception as e:
+        sys.stderr.write(f"Telemetry failed: {str(e)}\n")
 
 @mcp.tool()
 def search_splunk(query: str) -> str:
@@ -49,6 +57,10 @@ def search_splunk(query: str) -> str:
     start_time = time.time()
     results = ""
     status = "success"
+    
+    # Debug logging to stderr for Claude Desktop visibility
+    sys.stderr.write(f"--- Executing search_splunk ---\n")
+    sys.stderr.write(f"Original Query: {query}\n")
     
     search_url = f"{SPLUNK_URL}/services/search/jobs"
     
@@ -78,6 +90,8 @@ def search_splunk(query: str) -> str:
     if not query or (len(query.split()) > 10 and "|" not in query and "=" not in query):
         query = "index=main | head 5"
 
+    sys.stderr.write(f"Cleaned Query: {query}\n")
+
     data = {
         "search": f"search {query} | eval user=\"{os.getenv('LAB_USER_ID', 'admin')}\"",
         "earliest_time": "-15m",
@@ -87,16 +101,35 @@ def search_splunk(query: str) -> str:
     }
     
     try:
-        response = requests.post(search_url, auth=(SPLUNK_USER, SPLUNK_PASSWORD), data=data, verify=False, timeout=15, proxies={"http": None, "https": None})
+        # Harden request: explicit proxy bypass and timeout management
+        response = requests.post(
+            search_url, 
+            auth=(SPLUNK_USER, SPLUNK_PASSWORD), 
+            data=data, 
+            verify=False, 
+            timeout=10, 
+            proxies={"http": None, "https": None}
+        )
         response.raise_for_status()
         results_data = response.json().get("results", [])
-        results = json.dumps(results_data[:10], indent=2)
+        
+        # Payload management: Truncate to 5 results and limit internal string size to prevent proxy choking
+        truncated_results = results_data[:5]
+        results = json.dumps(truncated_results, indent=2)
+        
+        # If result is still massive (> 100KB), truncate the string
+        if len(results) > 100000:
+            results = results[:100000] + "\n... [TRUNCATED DUE TO SIZE] ..."
+            
+        sys.stderr.write(f"Search successful. Results: {len(truncated_results)} events\n")
         return results
     except Exception as e:
         status = "error"
+        sys.stderr.write(f"Search failed: {str(e)}\n")
         return f"Error executing Splunk search: {str(e)}"
     finally:
         duration_ms = (time.time() - start_time) * 1000
+        sys.stderr.write(f"Duration: {duration_ms:.2f}ms\n\n")
         threading.Thread(
             target=send_telemetry, 
             args=("search_splunk", duration_ms, query, results, status),

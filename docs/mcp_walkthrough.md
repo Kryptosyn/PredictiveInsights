@@ -13,7 +13,7 @@ The MCP server uses the Splunk Management API (Port 8089) for queries. Set these
 ```bash
 export SPLUNK_URL="https://localhost:8089"
 export SPLUNK_USER="admin"
-export SPLUNK_PASSWORD="ChangedPassword123"
+export SPLUNK_PASSWORD="<SPLUNK_PASSWORD>"
 ```
 
 ### B. Install Dependencies
@@ -52,14 +52,14 @@ To use this with Claude Desktop:
 {
   "mcpServers": {
     "splunk": {
-      "command": "/Users/micdemar/Library/CloudStorage/OneDrive-Cisco/Predictive Insights/splunk_mcp/venv/bin/python3",
+      "command": "<PROJECT_ROOT>/splunk_mcp/venv/bin/python3",
       "args": [
-        "/Users/micdemar/Library/CloudStorage/OneDrive-Cisco/Predictive Insights/splunk_mcp/mcp_server.py"
+        "<PROJECT_ROOT>/splunk_mcp/mcp_server.py"
       ],
       "env": {
         "SPLUNK_URL": "https://localhost:8089",
         "SPLUNK_USER": "admin",
-        "SPLUNK_PASSWORD": "ChangedPassword123"
+        "SPLUNK_PASSWORD": "<SPLUNK_PASSWORD>"
       }
     }
   }

@@ -1,10 +1,11 @@
+import os
 import requests
 import json
 import time
 
 base_url = "http://localhost:3000"
-email = "micdemar@cisco.com"
-password = "ChangedPassword123"
+email = os.getenv("LAB_ADMIN_EMAIL", "<USER_EMAIL>")
+password = os.getenv("LAB_ADMIN_PASSWORD", "<SPLUNK_PASSWORD>")
 
 # 1. Login
 print("Logging in as admin...")
@@ -13,7 +14,9 @@ token = res.json().get("token")
 headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
 # 2. Get code
-with open("/Users/micdemar/Library/CloudStorage/OneDrive-Cisco/Predictive Insights/genai_telemetry_filter.py", "r") as f:
+# Use relative path or placeholder
+filter_path = os.getenv("FILTER_PATH", "./genai_telemetry_filter.py")
+with open(filter_path, "r") as f:
     content = f.read()
 
 # 3. Create or update function

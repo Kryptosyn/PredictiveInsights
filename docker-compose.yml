@@ -42,8 +42,8 @@ services:
       dockerfile: utils/Dockerfile.ide
     container_name: code_server
     environment:
-      - PASSWORD=LabPassword123
-      - SUDO_PASSWORD=LabPassword123
+      - PASSWORD=${IDE_PASSWORD:-LabPassword123}
+      - SUDO_PASSWORD=${IDE_PASSWORD:-LabPassword123}
       - USER_LIST=user01,user02,user03,user04,user05,user06,user07,user08,user09,user10,user11,user12,user13,user14,user15,user16,user17,user18,user19,user20,user21,user22,user23,user24
     volumes:
       - .:/home/coder/project
@@ -61,7 +61,7 @@ services:
       - 'ENABLE_SIGNUP=True'
       - 'ENABLE_PERSISTENT_CONFIG=False'
       - 'DEFAULT_USER_ROLE=user'
-      - 'WEBUI_URL=https://roosevelt-nonentreating-paler.ngrok-free.dev'
+      - 'WEBUI_URL=${NGROK_URL:-https://your-ngrok-domain.ngrok-free.dev}'
       - 'DEFAULT_MODELS=gemma3:1b'
       - 'ENABLE_MODEL_WHITELIST=False'
     volumes:
@@ -106,7 +106,7 @@ services:
     command:
       - "http"
       - "gateway:80"
-      - "--domain=roosevelt-nonentreating-paler.ngrok-free.dev"
+      - "--domain=${NGROK_DOMAIN:-your-ngrok-domain.ngrok-free.dev}"
     environment:
       - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
     depends_on:
